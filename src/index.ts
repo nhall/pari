@@ -3,3 +3,4 @@
 // to extend or reference the constructor (e.g. instanceof checks).
 
 export { PariDisclosure } from './components/disclosure/disclosure';
+export { PariAccordion } from './components/accordion/accordion';

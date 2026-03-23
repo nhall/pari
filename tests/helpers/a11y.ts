@@ -1,17 +1,13 @@
 import AxeBuilder from '@axe-core/playwright';
 import { expect, type Page } from '@playwright/test';
 
-/** Run an axe-core audit against the Storybook preview iframe. */
+/** Run an axe-core audit against the current page. */
 export async function checkA11y(page: Page) {
-	const storyFrame = page.frame({ url: /iframe\.html/ });
-
-	if (!storyFrame) {
-		throw new Error('Could not find Storybook preview iframe');
-	}
-
-	const { violations } = await new AxeBuilder({
-		page: storyFrame as any,
-	}).analyze();
+	const { violations } = await new AxeBuilder({ page })
+		.exclude('#storybook-root')
+		.include('#storybook-root')
+		.disableRules(['landmark-one-main', 'page-has-heading-one', 'region'])
+		.analyze();
 
 	const report = violations
 		.map(

@@ -1,8 +1,5 @@
-let counter = 0;
-
-function uid(prefix: string): string {
-	return `${prefix}-${++counter}`;
-}
+import { uid } from '../../utils/uid.js';
+import { verticalKeyNavigation } from '../../utils/keyboard.js';
 
 /**
  * Disclosure component — APG Disclosure Pattern.
@@ -279,35 +276,12 @@ export class PariDisclosure extends HTMLElement {
 		const items = Array.from(
 			this._content!.querySelectorAll<HTMLElement>('[data-item]')
 		);
-		const current = items.indexOf(target.closest('[data-item]') as HTMLElement);
 
-		if (current === -1) return;
-
-		const loop = this.hasAttribute('loop-navigation');
-		let next: number | null = null;
-
-		switch (event.key) {
-			case 'ArrowDown':
-				event.preventDefault();
-				next = current < items.length - 1 ? current + 1 : loop ? 0 : null;
-				break;
-			case 'ArrowUp':
-				event.preventDefault();
-				next = current > 0 ? current - 1 : loop ? items.length - 1 : null;
-				break;
-			case 'Home':
-				event.preventDefault();
-				next = 0;
-				break;
-			case 'End':
-				event.preventDefault();
-				next = items.length - 1;
-				break;
-		}
-
-		if (next !== null) {
-			items[next].focus();
-		}
+		verticalKeyNavigation({
+			event,
+			items,
+			loop: this.hasAttribute('loop-navigation'),
+		});
 	}
 }
 
