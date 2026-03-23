@@ -1,0 +1,22 @@
+node_modules
+dist
+storybook-static
+
+# Playwright
+test-results
+playwright-report
+blob-report
+
+# Editor
+.vscode
+.idea
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment
+.env
+.env.local
