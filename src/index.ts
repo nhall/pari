@@ -2,4 +2,4 @@
 // Re-exporting the class makes it available for ESM consumers who need
 // to extend or reference the constructor (e.g. instanceof checks).
 
-export { UIDisclosure } from './components/disclosure/disclosure';
+export { PariDisclosure } from './components/disclosure/disclosure';

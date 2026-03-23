@@ -12,7 +12,7 @@ function uid(prefix: string): string {
  * and the hidden attribute on child elements identified by
  * [data-trigger] and [data-content].
  *
- * @element ui-disclosure
+ * @element pari-disclosure
  *
  * @attr {boolean} open           - Reflects open state. Set to start open.
  * @attr {boolean} persistent     - Disables auto-close (escape, blur, outside click).
@@ -24,7 +24,7 @@ function uid(prefix: string): string {
  * @fires disclosure:open  - After opening.  detail: { instance }
  * @fires disclosure:close - After closing.  detail: { instance }
  */
-export class UIDisclosure extends HTMLElement {
+export class PariDisclosure extends HTMLElement {
 	static observedAttributes = ['open'];
 
 	private _trigger: HTMLElement | null = null;
@@ -121,7 +121,7 @@ export class UIDisclosure extends HTMLElement {
 		this._enabled = true;
 
 		if (!this._content.id) {
-			this._content.id = uid('ui-disclosure-content');
+			this._content.id = uid('pari-disclosure-content');
 		}
 
 		this._trigger.setAttribute('aria-controls', this._content.id);
@@ -210,13 +210,13 @@ export class UIDisclosure extends HTMLElement {
 
 	/**
 	 * querySelector scoped to this instance — skips children that
-	 * belong to a nested ui-disclosure.
+	 * belong to a nested pari-disclosure.
 	 */
 	private _ownChild(selector: string): HTMLElement | null {
 		const el = this.querySelector<HTMLElement>(selector);
 
 		if (!el) return null;
-		if (el.closest('ui-disclosure') !== this) return null;
+		if (el.closest('pari-disclosure') !== this) return null;
 
 		return el;
 	}
@@ -311,4 +311,4 @@ export class UIDisclosure extends HTMLElement {
 	}
 }
 
-customElements.define('ui-disclosure', UIDisclosure);
+customElements.define('pari-disclosure', PariDisclosure);

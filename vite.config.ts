@@ -9,7 +9,7 @@ export default defineConfig({
   build: {
     lib: {
       entry: resolve(__dirname, 'src/index.ts'),
-      name: 'AccessibleComponents',
+      name: 'Pari',
       formats: ['es', 'iife'],
       fileName: (format) => {
         if (format === 'es') return 'components.js';

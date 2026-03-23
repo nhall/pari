@@ -16,62 +16,62 @@ type Story = StoryObj;
 
 export const Default: Story = {
 	render: () => html`
-		<ui-disclosure>
+		<pari-disclosure>
 			<button data-trigger>Toggle details</button>
 			<div data-content hidden>
 				<p>Panel content with a <a href="#">link inside</a>.</p>
 			</div>
-		</ui-disclosure>
+		</pari-disclosure>
 	`,
 };
 
 export const StartsOpen: Story = {
 	render: () => html`
-		<ui-disclosure open>
+		<pari-disclosure open>
 			<button data-trigger>Toggle details</button>
 			<div data-content>
 				<p>This panel starts open.</p>
 			</div>
-		</ui-disclosure>
+		</pari-disclosure>
 	`,
 };
 
 export const Persistent: Story = {
 	render: () => html`
-		<ui-disclosure persistent>
+		<pari-disclosure persistent>
 			<button data-trigger>Toggle details</button>
 			<div data-content hidden>
 				<p>Escape, blur, and outside click will not close this panel.</p>
 			</div>
-		</ui-disclosure>
+		</pari-disclosure>
 	`,
 };
 
 export const HiddenUntilFound: Story = {
 	render: () => html`
-		<ui-disclosure hidden-until-found>
+		<pari-disclosure hidden-until-found>
 			<button data-trigger>Toggle details</button>
 			<div data-content hidden="until-found">
 				<p>This content is searchable via find-in-page even when collapsed.</p>
 			</div>
-		</ui-disclosure>
+		</pari-disclosure>
 	`,
 };
 
 export const MediaQuery: Story = {
 	render: () => html`
-		<ui-disclosure media="(min-width: 740px)">
+		<pari-disclosure media="(min-width: 740px)">
 			<button data-trigger>Toggle details</button>
 			<div data-content hidden>
 				<p>This disclosure only activates above 740px.</p>
 			</div>
-		</ui-disclosure>
+		</pari-disclosure>
 	`,
 };
 
 export const KeyboardNavigation: Story = {
 	render: () => html`
-		<ui-disclosure keyboard-navigation loop-navigation>
+		<pari-disclosure keyboard-navigation loop-navigation>
 			<button data-trigger>Toggle menu</button>
 			<div data-content hidden>
 				<a href="#" data-item>Item one</a>
@@ -79,18 +79,18 @@ export const KeyboardNavigation: Story = {
 				<a href="#" data-item>Item three</a>
 				<a href="#" data-item>Item four</a>
 			</div>
-		</ui-disclosure>
+		</pari-disclosure>
 	`,
 };
 
 export const Closer: Story = {
 	render: () => html`
-		<ui-disclosure>
+		<pari-disclosure>
 			<button data-trigger>Toggle details</button>
 			<div data-content hidden>
 				<p>Panel with an internal close button.</p>
 				<button data-close>Close</button>
 			</div>
-		</ui-disclosure>
+		</pari-disclosure>
 	`,
 };
