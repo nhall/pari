@@ -21,19 +21,25 @@ export const Default: Story = {
 			<pari-disclosure persistent>
 				<button data-trigger>Section 1</button>
 				<div data-content hidden>
-					<p>Content for section one.</p>
+					<div class="sb-panel">
+						<p>Content for section one.</p>
+					</div>
 				</div>
 			</pari-disclosure>
 			<pari-disclosure persistent>
 				<button data-trigger>Section 2</button>
 				<div data-content hidden>
-					<p>Content for section two.</p>
+					<div class="sb-panel">
+						<p>Content for section two.</p>
+					</div>
 				</div>
 			</pari-disclosure>
 			<pari-disclosure persistent>
 				<button data-trigger>Section 3</button>
 				<div data-content hidden>
-					<p>Content for section three.</p>
+					<div class="sb-panel">
+						<p>Content for section three.</p>
+					</div>
 				</div>
 			</pari-disclosure>
 		</pari-accordion>
@@ -46,19 +52,25 @@ export const Grouped: Story = {
 			<pari-disclosure persistent open>
 				<button data-trigger>Section 1</button>
 				<div data-content>
-					<p>Content for section one. Opening another section closes this one.</p>
+					<div class="sb-panel">
+						<p>Content for section one. Opening another section closes this one.</p>
+					</div>
 				</div>
 			</pari-disclosure>
 			<pari-disclosure persistent>
 				<button data-trigger>Section 2</button>
 				<div data-content hidden>
-					<p>Content for section two.</p>
+					<div class="sb-panel">
+						<p>Content for section two.</p>
+					</div>
 				</div>
 			</pari-disclosure>
 			<pari-disclosure persistent>
 				<button data-trigger>Section 3</button>
 				<div data-content hidden>
-					<p>Content for section three.</p>
+					<div class="sb-panel">
+						<p>Content for section three.</p>
+					</div>
 				</div>
 			</pari-disclosure>
 		</pari-accordion>
@@ -71,19 +83,25 @@ export const AlwaysOpen: Story = {
 			<pari-disclosure persistent open>
 				<button data-trigger>Section 1</button>
 				<div data-content>
-					<p>One section must always remain open. Try closing this one.</p>
+					<div class="sb-panel">
+						<p>One section must always remain open. Try closing this one.</p>
+					</div>
 				</div>
 			</pari-disclosure>
 			<pari-disclosure persistent>
 				<button data-trigger>Section 2</button>
 				<div data-content hidden>
-					<p>Content for section two.</p>
+					<div class="sb-panel">
+						<p>Content for section two.</p>
+					</div>
 				</div>
 			</pari-disclosure>
 			<pari-disclosure persistent>
 				<button data-trigger>Section 3</button>
 				<div data-content hidden>
-					<p>Content for section three.</p>
+					<div class="sb-panel">
+						<p>Content for section three.</p>
+					</div>
 				</div>
 			</pari-disclosure>
 		</pari-accordion>
@@ -92,23 +110,21 @@ export const AlwaysOpen: Story = {
 
 export const Horizontal: Story = {
 	render: () => html`
-		<pari-accordion orientation="horizontal" grouped>
+		<pari-accordion orientation="horizontal" always-open>
 			<pari-disclosure persistent open>
-				<button data-trigger>Tab 1</button>
+				<button data-trigger>Section 1</button>
 				<div data-content>
-					<p>Use ArrowLeft / ArrowRight to navigate between triggers.</p>
+					<div class="sb-panel">
+						<p>Use ArrowLeft / ArrowRight to navigate between triggers.</p>
+					</div>
 				</div>
 			</pari-disclosure>
 			<pari-disclosure persistent>
-				<button data-trigger>Tab 2</button>
+				<button data-trigger>Section 2</button>
 				<div data-content hidden>
-					<p>Content for tab two.</p>
-				</div>
-			</pari-disclosure>
-			<pari-disclosure persistent>
-				<button data-trigger>Tab 3</button>
-				<div data-content hidden>
-					<p>Content for tab three.</p>
+					<div class="sb-panel">
+						<p>Content for section two.</p>
+					</div>
 				</div>
 			</pari-disclosure>
 		</pari-accordion>
@@ -121,19 +137,25 @@ export const LoopNavigation: Story = {
 			<pari-disclosure persistent open>
 				<button data-trigger>Section 1</button>
 				<div data-content>
-					<p>Arrow keys wrap around from last to first and vice versa.</p>
+					<div class="sb-panel">
+						<p>Arrow keys wrap around from last to first and vice versa.</p>
+					</div>
 				</div>
 			</pari-disclosure>
 			<pari-disclosure persistent>
 				<button data-trigger>Section 2</button>
 				<div data-content hidden>
-					<p>Content for section two.</p>
+					<div class="sb-panel">
+						<p>Content for section two.</p>
+					</div>
 				</div>
 			</pari-disclosure>
 			<pari-disclosure persistent>
 				<button data-trigger>Section 3</button>
 				<div data-content hidden>
-					<p>Content for section three.</p>
+					<div class="sb-panel">
+						<p>Content for section three.</p>
+					</div>
 				</div>
 			</pari-disclosure>
 		</pari-accordion>

@@ -19,7 +19,9 @@ export const Default: Story = {
 		<pari-disclosure>
 			<button data-trigger>Toggle details</button>
 			<div data-content hidden>
-				<p>Panel content with a <a href="#">link inside</a>.</p>
+				<div class="sb-panel">
+					<p>Panel content with a <a href="#">link inside</a>.</p>
+				</div>
 			</div>
 		</pari-disclosure>
 	`,
@@ -30,7 +32,9 @@ export const StartsOpen: Story = {
 		<pari-disclosure open>
 			<button data-trigger>Toggle details</button>
 			<div data-content>
-				<p>This panel starts open.</p>
+				<div class="sb-panel">
+					<p>This panel starts open.</p>
+				</div>
 			</div>
 		</pari-disclosure>
 	`,
@@ -41,7 +45,9 @@ export const Persistent: Story = {
 		<pari-disclosure persistent>
 			<button data-trigger>Toggle details</button>
 			<div data-content hidden>
-				<p>Escape, blur, and outside click will not close this panel.</p>
+				<div class="sb-panel">
+					<p>Escape, blur, and outside click will not close this panel.</p>
+				</div>
 			</div>
 		</pari-disclosure>
 	`,
@@ -52,7 +58,9 @@ export const HiddenUntilFound: Story = {
 		<pari-disclosure hidden-until-found>
 			<button data-trigger>Toggle details</button>
 			<div data-content hidden="until-found">
-				<p>This content is searchable via find-in-page even when collapsed.</p>
+				<div class="sb-panel">
+					<p>This content is searchable via find-in-page even when collapsed.</p>
+				</div>
 			</div>
 		</pari-disclosure>
 	`,
@@ -63,7 +71,9 @@ export const MediaQuery: Story = {
 		<pari-disclosure media="(min-width: 740px)">
 			<button data-trigger>Toggle details</button>
 			<div data-content hidden>
-				<p>This disclosure only activates above 740px.</p>
+				<div class="sb-panel">
+					<p>This disclosure only activates above 740px.</p>
+				</div>
 			</div>
 		</pari-disclosure>
 	`,
@@ -74,10 +84,12 @@ export const KeyboardNavigation: Story = {
 		<pari-disclosure keyboard-navigation loop-navigation>
 			<button data-trigger>Toggle menu</button>
 			<div data-content hidden>
-				<a href="#" data-item>Item one</a>
-				<a href="#" data-item>Item two</a>
-				<a href="#" data-item>Item three</a>
-				<a href="#" data-item>Item four</a>
+				<div class="sb-panel">
+					<a href="#" data-item>Item one</a>
+					<a href="#" data-item>Item two</a>
+					<a href="#" data-item>Item three</a>
+					<a href="#" data-item>Item four</a>
+				</div>
 			</div>
 		</pari-disclosure>
 	`,
@@ -88,8 +100,10 @@ export const Closer: Story = {
 		<pari-disclosure>
 			<button data-trigger>Toggle details</button>
 			<div data-content hidden>
-				<p>Panel with an internal close button.</p>
-				<button data-close>Close</button>
+				<div class="sb-panel">
+					<p>Panel with an internal close button.</p>
+					<button data-close>Close</button>
+				</div>
 			</div>
 		</pari-disclosure>
 	`,
