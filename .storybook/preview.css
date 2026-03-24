@@ -313,3 +313,128 @@ pari-tabs [data-panel] p {
 	margin-block: 0;
 	margin-inline: 0;
 }
+
+/* Dialog
+============================================================================= */
+
+/**
+  * Scroll lock support — must be in the global stylesheet
+  * since it targets <html> and <body>.
+  */
+
+.state-locked {
+	overflow: hidden;
+}
+
+.state-locked body {
+	position: fixed;
+	inline-size: 100%;
+}
+
+pari-dialog dialog {
+	position: fixed;
+	inset-block-start: 50%;
+	inset-inline-start: 50%;
+	transform: translate(-50%, -50%);
+
+	max-inline-size: 32rem;
+	inline-size: calc(100% - 2rem);
+
+	font-family: var(--sb-font);
+
+	background: var(--sb-bg-content);
+	border: 1px solid var(--sb-border);
+	border-end-end-radius: var(--sb-radius);
+	border-end-start-radius: var(--sb-radius);
+	border-start-end-radius: var(--sb-radius);
+	border-start-start-radius: var(--sb-radius);
+	padding-block: 1.5rem;
+	padding-inline: 1.5rem;
+}
+
+pari-dialog dialog::backdrop {
+	background: rgb(0 0 0 / 0.5);
+}
+
+pari-dialog dialog h2 {
+	color: var(--sb-text);
+	font-size: 1.125rem;
+	font-weight: 600;
+
+	margin-block: 0 0.75rem;
+	margin-inline: 0;
+}
+
+pari-dialog dialog p {
+	color: var(--sb-text-muted);
+	font-size: 0.875rem;
+	line-height: 1.5;
+
+	margin-block: 0 1rem;
+	margin-inline: 0;
+}
+
+pari-dialog dialog input {
+	display: block;
+	inline-size: 100%;
+
+	font-family: inherit;
+	font-size: 0.875rem;
+
+	border: 1px solid var(--sb-border);
+	border-end-end-radius: var(--sb-radius);
+	border-end-start-radius: var(--sb-radius);
+	border-start-end-radius: var(--sb-radius);
+	border-start-start-radius: var(--sb-radius);
+	margin-block-end: 1rem;
+	padding-block: 0.5rem;
+	padding-inline: 0.75rem;
+}
+
+pari-dialog dialog input:focus-visible {
+	box-shadow: var(--sb-focus-ring);
+	outline: none;
+}
+
+pari-dialog [data-trigger] {
+	font-family: inherit;
+	font-size: 0.9375rem;
+	font-weight: 600;
+
+	background: var(--sb-accent);
+	border: none;
+	border-end-end-radius: var(--sb-radius);
+	border-end-start-radius: var(--sb-radius);
+	border-start-end-radius: var(--sb-radius);
+	border-start-start-radius: var(--sb-radius);
+	color: #fff;
+	cursor: pointer;
+	padding-block: 0.625rem;
+	padding-inline: 1rem;
+}
+
+pari-dialog [data-trigger]:focus-visible {
+	box-shadow: var(--sb-focus-ring);
+	outline: none;
+}
+
+pari-dialog [data-close] {
+	font-family: inherit;
+	font-size: 0.8125rem;
+
+	background: none;
+	border: 1px solid var(--sb-border);
+	border-end-end-radius: var(--sb-radius);
+	border-end-start-radius: var(--sb-radius);
+	border-start-end-radius: var(--sb-radius);
+	border-start-start-radius: var(--sb-radius);
+	color: var(--sb-text-muted);
+	cursor: pointer;
+	padding-block: 0.375rem;
+	padding-inline: 0.75rem;
+}
+
+pari-dialog [data-close]:focus-visible {
+	box-shadow: var(--sb-focus-ring);
+	outline: none;
+}
