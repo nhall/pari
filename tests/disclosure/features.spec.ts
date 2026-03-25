@@ -40,8 +40,8 @@ test.describe('Hidden until found', () => {
 });
 
 test.describe('Media query', () => {
-	test('disclosure is active at wide viewport', async ({ page }) => {
-		await page.setViewportSize({ width: 1024, height: 768 });
+	test('disclosure is active at narrow viewport', async ({ page }) => {
+		await page.setViewportSize({ width: 500, height: 768 });
 		await page.goto(URLS.mediaQuery);
 
 		const trigger = getTrigger(page);
@@ -51,33 +51,33 @@ test.describe('Media query', () => {
 		await expect(trigger).toHaveAttribute('aria-expanded', 'true');
 	});
 
-	test('disclosure is disabled below media query breakpoint', async ({ page }) => {
-		await page.setViewportSize({ width: 500, height: 768 });
+	test('disclosure is disabled above media query breakpoint', async ({ page }) => {
+		await page.setViewportSize({ width: 1024, height: 768 });
 		await page.goto(URLS.mediaQuery);
 
 		const trigger = getTrigger(page);
 		await expect(trigger).not.toHaveAttribute('aria-expanded');
 	});
 
-	test('disclosure disables when viewport shrinks below breakpoint', async ({ page }) => {
-		await page.setViewportSize({ width: 1024, height: 768 });
+	test('disclosure disables when viewport grows above breakpoint', async ({ page }) => {
+		await page.setViewportSize({ width: 500, height: 768 });
 		await page.goto(URLS.mediaQuery);
 
 		const trigger = getTrigger(page);
 		await expect(trigger).toHaveAttribute('aria-expanded', 'false');
 
-		await page.setViewportSize({ width: 500, height: 768 });
+		await page.setViewportSize({ width: 1024, height: 768 });
 		await expect(trigger).not.toHaveAttribute('aria-expanded');
 	});
 
-	test('disclosure re-enables when viewport grows above breakpoint', async ({ page }) => {
-		await page.setViewportSize({ width: 500, height: 768 });
+	test('disclosure re-enables when viewport shrinks below breakpoint', async ({ page }) => {
+		await page.setViewportSize({ width: 1024, height: 768 });
 		await page.goto(URLS.mediaQuery);
 
 		const trigger = getTrigger(page);
 		await expect(trigger).not.toHaveAttribute('aria-expanded');
 
-		await page.setViewportSize({ width: 1024, height: 768 });
+		await page.setViewportSize({ width: 500, height: 768 });
 		await expect(trigger).toHaveAttribute('aria-expanded', 'false');
 	});
 });

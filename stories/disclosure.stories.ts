@@ -65,11 +65,11 @@ export const HiddenUntilFound: Story = {
 
 export const MediaQuery: Story = {
 	render: () => html`
-		<pari-disclosure media="(min-width: 740px)">
+		<pari-disclosure media="(max-width: 740px)">
 			<button data-trigger>Toggle details</button>
 			<div data-content hidden>
 				<div class="sb-panel">
-					<p>This disclosure only activates above 740px.</p>
+					<p>This disclosure only activates below 740px. Resize your browser to see it enable/disable.</p>
 				</div>
 			</div>
 		</pari-disclosure>

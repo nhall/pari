@@ -20,6 +20,7 @@ const HOVER_DELAY = 150;
 export class PariNavDisclosure extends HTMLElement {
 	private _handleOpen = this._onOpen.bind(this);
 	private _handleKeydown = this._onKeydown.bind(this);
+	private _handleClick = this._onClick.bind(this);
 	private _handleBlur = this._onBlur.bind(this);
 	private _hoverTimeouts = new Map<PariDisclosureElement, ReturnType<typeof setTimeout>>();
 	private _hoverListeners: Array<{ el: HTMLElement; enter: () => void; leave: () => void }> = [];
@@ -40,12 +41,14 @@ export class PariNavDisclosure extends HTMLElement {
 
 		this.addEventListener('disclosure:open', this._handleOpen);
 		this.addEventListener('keydown', this._handleKeydown);
+		this.addEventListener('click', this._handleClick, true);
 		document.addEventListener('focusin', this._handleBlur);
 	}
 
 	disconnectedCallback() {
 		this.removeEventListener('disclosure:open', this._handleOpen);
 		this.removeEventListener('keydown', this._handleKeydown);
+		this.removeEventListener('click', this._handleClick, true);
 		document.removeEventListener('focusin', this._handleBlur);
 
 		for (const { el, enter, leave } of this._hoverListeners) {
@@ -101,6 +104,25 @@ export class PariNavDisclosure extends HTMLElement {
 				this._hoverTimeouts.delete(disclosure);
 			}, HOVER_DELAY)
 		);
+	}
+
+	private _onClick(event: Event) {
+		const target = event.target as HTMLElement;
+		const trigger = target.closest('[data-trigger]');
+		if (!trigger) return;
+
+		const disclosure = trigger.closest('pari-disclosure') as PariDisclosureElement | null;
+		if (!disclosure || disclosure.parentElement !== this) return;
+
+		// Capture phase — prevent the child disclosure from handling its own click.
+		event.stopPropagation();
+
+		if (disclosure.open) {
+			disclosure.hide(false);
+		} else {
+			this._closeSiblings(disclosure);
+			disclosure.show();
+		}
 	}
 
 	private _onOpen(event: Event) {
