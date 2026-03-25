@@ -1,6 +1,3 @@
-// NOTE: `lit` is used in story files ONLY for Storybook's html template tag.
-// It is a devDependency and must never be imported in component source (src/).
-// Component source is vanilla TypeScript with zero runtime dependencies.
 import { html } from 'lit';
 import type { Meta, StoryObj } from '@storybook/web-components';
 
@@ -141,6 +138,33 @@ export const HiddenUntilFound: Story = {
 				</div>
 			</div>
 			<div data-panel>
+				<div class="sb-panel">
+					<p>Content for tab three.</p>
+				</div>
+			</div>
+		</pari-tabs>
+	`,
+};
+
+export const Deeplink: Story = {
+	render: () => html`
+		<pari-tabs deeplink>
+			<div data-tablist>
+				<button data-tab aria-selected="true">Tab 1</button>
+				<button data-tab>Tab 2</button>
+				<button data-tab>Tab 3</button>
+			</div>
+			<div data-panel id="dl-tab-1">
+				<div class="sb-panel">
+					<p>Content for tab one.</p>
+				</div>
+			</div>
+			<div data-panel id="dl-tab-2">
+				<div class="sb-panel">
+					<p>Content for tab two.</p>
+				</div>
+			</div>
+			<div data-panel id="dl-tab-3">
 				<div class="sb-panel">
 					<p>Content for tab three.</p>
 				</div>

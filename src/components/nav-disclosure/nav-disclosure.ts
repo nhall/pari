@@ -1,4 +1,6 @@
 import { verticalKeyNavigation } from '../../utils/keyboard.js';
+import { onFocusOutside } from '../../utils/focus.js';
+import type { PariDisclosureElement } from '../../types.js';
 
 const HOVER_DELAY = 150;
 
@@ -19,20 +21,22 @@ export class PariNavDisclosure extends HTMLElement {
 	private _handleOpen = this._onOpen.bind(this);
 	private _handleKeydown = this._onKeydown.bind(this);
 	private _handleBlur = this._onBlur.bind(this);
-	private _hoverTimeouts = new Map<HTMLElement, ReturnType<typeof setTimeout>>();
+	private _hoverTimeouts = new Map<PariDisclosureElement, ReturnType<typeof setTimeout>>();
+	private _hoverListeners: Array<{ el: HTMLElement; enter: () => void; leave: () => void }> = [];
 
 	connectedCallback() {
-		const disclosures = this._disclosures;
-
-		disclosures.forEach((d) => {
+		for (const d of this._disclosures) {
 			const trigger = d.querySelector<HTMLElement>('[data-trigger]');
 			if (trigger) {
 				trigger.setAttribute('aria-haspopup', 'true');
 			}
 
-			d.addEventListener('mouseenter', () => this._onMouseEnter(d));
-			d.addEventListener('mouseleave', () => this._onMouseLeave(d));
-		});
+			const enter = () => this._onMouseEnter(d);
+			const leave = () => this._onMouseLeave(d);
+			d.addEventListener('mouseenter', enter);
+			d.addEventListener('mouseleave', leave);
+			this._hoverListeners.push({ el: d, enter, leave });
+		}
 
 		this.addEventListener('disclosure:open', this._handleOpen);
 		this.addEventListener('keydown', this._handleKeydown);
@@ -43,74 +47,73 @@ export class PariNavDisclosure extends HTMLElement {
 		this.removeEventListener('disclosure:open', this._handleOpen);
 		this.removeEventListener('keydown', this._handleKeydown);
 		document.removeEventListener('focusin', this._handleBlur);
+
+		for (const { el, enter, leave } of this._hoverListeners) {
+			el.removeEventListener('mouseenter', enter);
+			el.removeEventListener('mouseleave', leave);
+		}
+		this._hoverListeners = [];
+
 		this._hoverTimeouts.forEach((t) => clearTimeout(t));
 		this._hoverTimeouts.clear();
 	}
 
-	private get _disclosures(): HTMLElement[] {
-		return Array.from(this.querySelectorAll<HTMLElement>(':scope > pari-disclosure'));
+	private get _disclosures(): PariDisclosureElement[] {
+		return Array.from(
+			this.querySelectorAll<HTMLElement>(':scope > pari-disclosure')
+		) as PariDisclosureElement[];
 	}
 
-	private get _openDisclosure(): HTMLElement | null {
-		return this._disclosures.find((d) => d.hasAttribute('open')) ?? null;
+	private get _openDisclosure(): PariDisclosureElement | null {
+		return this._disclosures.find((d) => d.open) ?? null;
 	}
 
-	private _closeAll(restoreFocus = false) {
-		for (const disclosure of this._disclosures) {
-			if (disclosure.hasAttribute('open')) {
-				(disclosure as any).hide(restoreFocus);
-			}
+	private _closeAll() {
+		for (const d of this._disclosures) {
+			if (d.open) d.hide(false);
 		}
 	}
 
-	private _onMouseEnter(disclosure: HTMLElement) {
+	private _closeSiblings(opened: PariDisclosureElement) {
+		for (const d of this._disclosures) {
+			if (d !== opened && d.open) d.hide(false);
+		}
+	}
+
+	private _onMouseEnter(disclosure: PariDisclosureElement) {
 		const existing = this._hoverTimeouts.get(disclosure);
 		if (existing) {
 			clearTimeout(existing);
 			this._hoverTimeouts.delete(disclosure);
 		}
 
-		if (!disclosure.hasAttribute('open')) {
+		if (!disclosure.open) {
 			this._closeSiblings(disclosure);
-			(disclosure as any).show();
+			disclosure.show();
 		}
 	}
 
-	private _onMouseLeave(disclosure: HTMLElement) {
+	private _onMouseLeave(disclosure: PariDisclosureElement) {
 		this._hoverTimeouts.set(
 			disclosure,
 			setTimeout(() => {
-				if (disclosure.hasAttribute('open')) {
-					(disclosure as any).hide(false);
-				}
+				if (disclosure.open) disclosure.hide(false);
 				this._hoverTimeouts.delete(disclosure);
 			}, HOVER_DELAY)
 		);
 	}
 
-	private _closeSiblings(opened: HTMLElement) {
-		for (const disclosure of this._disclosures) {
-			if (disclosure !== opened && disclosure.hasAttribute('open')) {
-				(disclosure as any).hide(false);
-			}
-		}
-	}
-
 	private _onOpen(event: Event) {
-		const opened = (event.target as HTMLElement).closest('pari-disclosure');
+		const opened = (event.target as HTMLElement).closest(
+			'pari-disclosure'
+		) as PariDisclosureElement | null;
 		if (!opened || opened.parentElement !== this) return;
 
 		this._closeSiblings(opened);
 	}
 
 	private _onBlur() {
-		setTimeout(() => {
-			const focused = document.activeElement;
-			if (!focused || focused === document.body) return;
-			if (this.contains(focused)) return;
-
-			this._closeAll(false);
-		}, 0);
+		onFocusOutside(this, () => this._closeAll());
 	}
 
 	private _onKeydown(event: KeyboardEvent) {
@@ -119,7 +122,7 @@ export class PariNavDisclosure extends HTMLElement {
 			if (open) {
 				event.preventDefault();
 				const trigger = open.querySelector<HTMLElement>('[data-trigger]');
-				(open as any).hide(false);
+				open.hide(false);
 				trigger?.focus();
 			}
 			return;
@@ -129,9 +132,9 @@ export class PariNavDisclosure extends HTMLElement {
 
 		const trigger = target.closest('[data-trigger]');
 		if (trigger) {
-			const disclosure = trigger.closest('pari-disclosure');
+			const disclosure = trigger.closest('pari-disclosure') as PariDisclosureElement | null;
 			if (disclosure && disclosure.parentElement === this) {
-				this._onTriggerKeydown(event, disclosure as HTMLElement);
+				this._onTriggerKeydown(event, disclosure);
 				return;
 			}
 		}
@@ -145,15 +148,13 @@ export class PariNavDisclosure extends HTMLElement {
 		}
 	}
 
-	private _onTriggerKeydown(event: KeyboardEvent, disclosure: HTMLElement) {
+	private _onTriggerKeydown(event: KeyboardEvent, disclosure: PariDisclosureElement) {
 		const key = event.key;
 		if (key !== 'ArrowDown' && key !== 'ArrowUp') return;
 
 		event.preventDefault();
 
-		if (!disclosure.hasAttribute('open')) {
-			(disclosure as any).show();
-		}
+		if (!disclosure.open) disclosure.show();
 
 		const content = disclosure.querySelector<HTMLElement>('[data-content]');
 		if (!content) return;

@@ -1,6 +1,3 @@
-// NOTE: `lit` is used in story files ONLY for Storybook's html template tag.
-// It is a devDependency and must never be imported in component source (src/).
-// Component source is vanilla TypeScript with zero runtime dependencies.
 import { html } from 'lit';
 import type { Meta, StoryObj } from '@storybook/web-components';
 
@@ -57,6 +54,21 @@ export const NoScrollLock: Story = {
 			</dialog>
 		</pari-dialog>
 		<div style="block-size: 200vh;"></div>
+	`,
+};
+
+export const Deeplink: Story = {
+	render: () => html`
+		<pari-dialog deeplink>
+			<button data-trigger>Open dialog</button>
+			<dialog id="dl-dialog" aria-labelledby="dl-dialog-title">
+				<div class="sb-dialog-body">
+					<h2 id="dl-dialog-title">Deeplinked dialog</h2>
+					<p>Navigate to #dl-dialog to open this dialog directly.</p>
+					<button data-close>Close</button>
+				</div>
+			</dialog>
+		</pari-dialog>
 	`,
 };
 

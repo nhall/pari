@@ -7,6 +7,7 @@ const URLS = {
 	loopNav: '/iframe.html?id=tabs--loop-navigation&viewMode=story',
 	hiddenUntilFound: '/iframe.html?id=tabs--hidden-until-found&viewMode=story',
 	panelFocusable: '/iframe.html?id=tabs--panel-with-focusable-content&viewMode=story',
+	deeplink: '/iframe.html?id=tabs--deeplink&viewMode=story',
 };
 
 function getTabs(page: import('@playwright/test').Page) {
@@ -146,5 +147,34 @@ test.describe('Tab switching', () => {
 		await tabs.first().click();
 		await expect(tabs.first()).toHaveAttribute('aria-selected', 'true');
 		await expect(panels.first()).not.toHaveAttribute('hidden');
+	});
+});
+
+test.describe('Deeplink', () => {
+	test('clicking a tab updates the URL hash to the panel ID', async ({ page }) => {
+		await page.goto(URLS.deeplink);
+
+		await getTabs(page).nth(1).click();
+
+		const hash = await page.evaluate(() => window.location.hash);
+		expect(hash).toBe('#dl-tab-2');
+	});
+
+	test('navigating to hash activates the matching tab', async ({ page }) => {
+		await page.goto(URLS.deeplink + '#dl-tab-2');
+
+		const tabs = getTabs(page);
+		await expect(tabs.nth(1)).toHaveAttribute('aria-selected', 'true');
+		await expect(getPanels(page).nth(1)).not.toHaveAttribute('hidden');
+	});
+
+	test('switching tabs updates the hash', async ({ page }) => {
+		await page.goto(URLS.deeplink);
+
+		await getTabs(page).nth(1).click();
+		expect(await page.evaluate(() => window.location.hash)).toBe('#dl-tab-2');
+
+		await getTabs(page).nth(2).click();
+		expect(await page.evaluate(() => window.location.hash)).toBe('#dl-tab-3');
 	});
 });

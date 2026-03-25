@@ -7,6 +7,7 @@ const URLS = {
 	backdropClose: '/iframe.html?id=dialog--backdrop-close&viewMode=story',
 	noScrollLock: '/iframe.html?id=dialog--no-scroll-lock&viewMode=story',
 	longContent: '/iframe.html?id=dialog--long-content&viewMode=story',
+	deeplink: '/iframe.html?id=dialog--deeplink&viewMode=story',
 };
 
 function getTrigger(page: import('@playwright/test').Page) {
@@ -135,6 +136,36 @@ test.describe('Open state', () => {
 	test('trigger opens the dialog', async ({ page }) => {
 		await page.goto(URLS.default);
 		await getTrigger(page).click();
+		await expect(getDialog(page)).toHaveJSProperty('open', true);
+	});
+});
+
+test.describe('Deeplink', () => {
+	test('opening updates the URL hash', async ({ page }) => {
+		await page.goto(URLS.deeplink);
+
+		await getTrigger(page).click();
+
+		const hash = await page.evaluate(() => window.location.hash);
+		expect(hash).toBe('#dl-dialog');
+	});
+
+	test('closing clears the URL hash', async ({ page }) => {
+		await page.goto(URLS.deeplink);
+
+		await getTrigger(page).click();
+		await expect(getDialog(page)).toHaveJSProperty('open', true);
+
+		await page.keyboard.press('Escape');
+		await expect(getDialog(page)).toHaveJSProperty('open', false);
+
+		const hash = await page.evaluate(() => window.location.hash);
+		expect(hash).toBe('');
+	});
+
+	test('navigating to hash opens the dialog', async ({ page }) => {
+		await page.goto(URLS.deeplink + '#dl-dialog');
+
 		await expect(getDialog(page)).toHaveJSProperty('open', true);
 	});
 });

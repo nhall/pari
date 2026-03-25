@@ -1,4 +1,5 @@
 import { verticalKeyNavigation, horizontalKeyNavigation } from '../../utils/keyboard.js';
+import type { PariDisclosureElement } from '../../types.js';
 
 /**
  * Accordion component — APG Accordion Pattern.
@@ -32,8 +33,10 @@ export class PariAccordion extends HTMLElement {
 		this.removeEventListener('keydown', this._handleKeydown);
 	}
 
-	private get _disclosures(): HTMLElement[] {
-		return Array.from(this.querySelectorAll<HTMLElement>(':scope > pari-disclosure'));
+	private get _disclosures(): PariDisclosureElement[] {
+		return Array.from(
+			this.querySelectorAll<HTMLElement>(':scope > pari-disclosure')
+		) as PariDisclosureElement[];
 	}
 
 	private get _triggers(): HTMLElement[] {
@@ -43,13 +46,15 @@ export class PariAccordion extends HTMLElement {
 	}
 
 	private _onOpen(event: Event) {
-		const opened = (event.target as HTMLElement).closest('pari-disclosure');
+		const opened = (event.target as HTMLElement).closest(
+			'pari-disclosure'
+		) as PariDisclosureElement | null;
 		if (!opened || opened.parentElement !== this) return;
 
 		if (this.hasAttribute('grouped') || this.hasAttribute('always-open')) {
 			for (const disclosure of this._disclosures) {
-				if (disclosure !== opened && disclosure.hasAttribute('open')) {
-					(disclosure as any).hide(false);
+				if (disclosure !== opened && disclosure.open) {
+					disclosure.hide(false);
 				}
 			}
 		}
@@ -80,14 +85,14 @@ export class PariAccordion extends HTMLElement {
 
 	private _enforceAlwaysOpen() {
 		const disclosures = this._disclosures;
-		const openItems = disclosures.filter((d) => d.hasAttribute('open'));
+		const hasOpen = disclosures.some((d) => d.open);
 
-		if (openItems.length === 0 && disclosures.length > 0) {
-			(disclosures[0] as any).show();
+		if (!hasOpen && disclosures.length > 0) {
+			disclosures[0].show();
 		}
 
 		for (const disclosure of disclosures) {
-			if (disclosure.hasAttribute('open')) {
+			if (disclosure.open) {
 				disclosure.setAttribute('no-collapse', '');
 			} else {
 				disclosure.removeAttribute('no-collapse');

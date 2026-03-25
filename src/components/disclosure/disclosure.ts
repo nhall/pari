@@ -1,5 +1,7 @@
 import { uid } from '../../utils/uid.js';
 import { verticalKeyNavigation } from '../../utils/keyboard.js';
+import { register, unregister, updateHash } from '../../utils/deeplink.js';
+import { onFocusOutside } from '../../utils/focus.js';
 
 /**
  * Disclosure component — APG Disclosure Pattern.
@@ -17,6 +19,8 @@ import { verticalKeyNavigation } from '../../utils/keyboard.js';
  * @attr {boolean} keyboard-navigation - Enables arrow/Home/End on [data-item] children.
  * @attr {boolean} loop-navigation - Wraps arrow keys (requires keyboard-navigation).
  * @attr {string}  media          - CSS media query; component active only while matching.
+ * @attr {boolean} no-collapse    - Prevents closing via the trigger (used by accordion always-open).
+ * @attr {boolean} deeplink       - Sync open state with URL hash (uses content ID).
  *
  * @fires disclosure:open  - After opening.  detail: { instance }
  * @fires disclosure:close - After closing.  detail: { instance }
@@ -37,6 +41,7 @@ export class PariDisclosure extends HTMLElement {
 	private _handleBeforeMatch = this._onBeforeMatch.bind(this);
 	private _handleMediaChange = this._onMediaChange.bind(this);
 	private _handleItemKeydown = this._onItemKeydown.bind(this);
+	private _deeplinkHandler: (() => void) | null = null;
 
 	connectedCallback() {
 		this._trigger = this._ownChild('[data-trigger]');
@@ -132,6 +137,14 @@ export class PariDisclosure extends HTMLElement {
 			this._content.addEventListener('keydown', this._handleItemKeydown);
 		}
 
+		if (this.hasAttribute('deeplink')) {
+			this._deeplinkHandler = () => {
+				this.show();
+				this._trigger?.focus();
+			};
+			register(`[data-content]#${this._content.id}`, this._deeplinkHandler);
+		}
+
 		this._syncing = true;
 		this._sync();
 		this._syncing = false;
@@ -158,6 +171,11 @@ export class PariDisclosure extends HTMLElement {
 			this._content.removeEventListener('keydown', this._handleItemKeydown);
 		}
 
+		if (this._deeplinkHandler && this._content) {
+			unregister(`[data-content]#${this._content.id}`, this._deeplinkHandler);
+			this._deeplinkHandler = null;
+		}
+
 		this._enabled = false;
 	}
 
@@ -179,6 +197,10 @@ export class PariDisclosure extends HTMLElement {
 
 		if (!this._syncing) {
 			this._dispatch(isOpen ? 'open' : 'close');
+
+			if (this.hasAttribute('deeplink') && this._content) {
+				updateHash(this._content.id, isOpen);
+			}
 		}
 	}
 
@@ -241,14 +263,7 @@ export class PariDisclosure extends HTMLElement {
 	}
 
 	private _onBlur() {
-		setTimeout(() => {
-			const focused = document.activeElement;
-
-			if (!focused || focused === document.body) return;
-			if (this.contains(focused)) return;
-
-			this.hide(false);
-		}, 0);
+		onFocusOutside(this, () => this.hide(false));
 	}
 
 	private _onOutsideClick(event: MouseEvent) {

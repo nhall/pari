@@ -7,6 +7,7 @@ const URLS = {
 	mediaQuery: '/iframe.html?id=disclosure--media-query&viewMode=story',
 	keyboardNav: '/iframe.html?id=disclosure--keyboard-navigation&viewMode=story',
 	closer: '/iframe.html?id=disclosure--closer&viewMode=story',
+	deeplink: '/iframe.html?id=disclosure--deeplink&viewMode=story',
 };
 
 function getTrigger(page: import('@playwright/test').Page) {
@@ -152,5 +153,33 @@ test.describe('Closer element', () => {
 		await getTrigger(page).click();
 		await page.locator('[data-close]').click();
 		await expect(getTrigger(page)).toBeFocused();
+	});
+});
+
+test.describe('Deeplink', () => {
+	test('opening updates the URL hash', async ({ page }) => {
+		await page.goto(URLS.deeplink);
+
+		await getTrigger(page).click();
+
+		const hash = await page.evaluate(() => window.location.hash);
+		expect(hash).toBe('#deeplink-panel');
+	});
+
+	test('closing clears the URL hash', async ({ page }) => {
+		await page.goto(URLS.deeplink);
+
+		await getTrigger(page).click();
+		await getTrigger(page).click();
+
+		const hash = await page.evaluate(() => window.location.hash);
+		expect(hash).toBe('');
+	});
+
+	test('navigating to hash opens the disclosure', async ({ page }) => {
+		await page.goto(URLS.deeplink + '#deeplink-panel');
+
+		await expect(getTrigger(page)).toHaveAttribute('aria-expanded', 'true');
+		await expect(getContent(page)).not.toHaveAttribute('hidden');
 	});
 });

@@ -1,4 +1,5 @@
 import { uid } from '../../utils/uid.js';
+import { onFocusOutside } from '../../utils/focus.js';
 
 /**
  * Popover component — wraps the native Popover API.
@@ -60,13 +61,17 @@ export class PariPopover extends HTMLElement {
 
 		if (this._content) {
 			this._content.removeEventListener('toggle', this._handleToggle);
-			this._content.removeEventListener('mouseenter', this._handleMouseEnter);
-			this._content.removeEventListener('mouseleave', this._handleMouseLeave);
+		}
+
+		if (this.hasAttribute('hover')) {
+			this._content?.removeEventListener('mouseenter', this._handleMouseEnter);
+			this._content?.removeEventListener('mouseleave', this._handleMouseLeave);
+			this._trigger?.removeEventListener('mouseenter', this._handleMouseEnter);
+			this._trigger?.removeEventListener('mouseleave', this._handleMouseLeave);
 		}
 
 		if (this._trigger) {
-			this._trigger.removeEventListener('mouseenter', this._handleMouseEnter);
-			this._trigger.removeEventListener('mouseleave', this._handleMouseLeave);
+			this._trigger.removeAttribute('popovertarget');
 		}
 
 		this._clearHoverTimeout();
@@ -125,14 +130,7 @@ export class PariPopover extends HTMLElement {
 	}
 
 	private _onBlur() {
-		setTimeout(() => {
-			const focused = document.activeElement;
-
-			if (!focused || focused === document.body) return;
-			if (this.contains(focused)) return;
-
-			this.hide();
-		}, 0);
+		onFocusOutside(this, () => this.hide());
 	}
 
 	private _onMouseEnter() {

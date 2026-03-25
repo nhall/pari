@@ -1,6 +1,3 @@
-// NOTE: `lit` is used in story files ONLY for Storybook's html template tag.
-// It is a devDependency and must never be imported in component source (src/).
-// Component source is vanilla TypeScript with zero runtime dependencies.
 import { html } from 'lit';
 import type { Meta, StoryObj } from '@storybook/web-components';
 
@@ -89,6 +86,19 @@ export const KeyboardNavigation: Story = {
 					<a href="#" data-item>Item two</a>
 					<a href="#" data-item>Item three</a>
 					<a href="#" data-item>Item four</a>
+				</div>
+			</div>
+		</pari-disclosure>
+	`,
+};
+
+export const Deeplink: Story = {
+	render: () => html`
+		<pari-disclosure deeplink>
+			<button data-trigger>Toggle details</button>
+			<div data-content id="deeplink-panel" hidden>
+				<div class="sb-panel">
+					<p>This disclosure syncs with the URL hash.</p>
 				</div>
 			</div>
 		</pari-disclosure>

@@ -1,4 +1,5 @@
 import { lockScroll, unlockScroll } from '../../utils/scroll-lock.js';
+import { register, unregister, updateHash } from '../../utils/deeplink.js';
 
 /**
  * Dialog component — APG Dialog (Modal) Pattern.
@@ -13,6 +14,7 @@ import { lockScroll, unlockScroll } from '../../utils/scroll-lock.js';
  *
  * @attr {boolean} close-on-backdrop - Close when clicking the backdrop.
  * @attr {boolean} no-scroll-lock    - Disable scroll locking when open.
+ * @attr {boolean} deeplink          - Sync open state with URL hash (uses dialog ID).
  *
  * @fires dialog:open  - After the dialog opens.  detail: { instance }
  * @fires dialog:close - After the dialog closes. detail: { instance }
@@ -23,6 +25,7 @@ export class PariDialog extends HTMLElement {
 	private _handleClick = this._onClick.bind(this);
 	private _handleClose = this._onClose.bind(this);
 	private _handleBackdropClick = this._onBackdropClick.bind(this);
+	private _deeplinkHandler: (() => void) | null = null;
 
 	connectedCallback() {
 		this._dialog = this.querySelector<HTMLDialogElement>('dialog');
@@ -41,6 +44,14 @@ export class PariDialog extends HTMLElement {
 		if (this.hasAttribute('close-on-backdrop')) {
 			this._dialog.addEventListener('click', this._handleBackdropClick);
 		}
+
+		if (this.hasAttribute('deeplink') && this._dialog.id) {
+			this._deeplinkHandler = () => {
+				this.show();
+				this._dialog?.focus();
+			};
+			register(`dialog#${this._dialog.id}`, this._deeplinkHandler);
+		}
 	}
 
 	disconnectedCallback() {
@@ -49,6 +60,11 @@ export class PariDialog extends HTMLElement {
 		if (this._dialog) {
 			this._dialog.removeEventListener('close', this._handleClose);
 			this._dialog.removeEventListener('click', this._handleBackdropClick);
+		}
+
+		if (this._deeplinkHandler && this._dialog?.id) {
+			unregister(`dialog#${this._dialog.id}`, this._deeplinkHandler);
+			this._deeplinkHandler = null;
 		}
 	}
 
@@ -64,6 +80,10 @@ export class PariDialog extends HTMLElement {
 
 		if (!this.hasAttribute('no-scroll-lock')) {
 			lockScroll();
+		}
+
+		if (this.hasAttribute('deeplink') && this._dialog.id) {
+			updateHash(this._dialog.id, true);
 		}
 
 		this.dispatchEvent(
@@ -98,6 +118,10 @@ export class PariDialog extends HTMLElement {
 	private _onClose() {
 		if (!this.hasAttribute('no-scroll-lock')) {
 			unlockScroll();
+		}
+
+		if (this.hasAttribute('deeplink') && this._dialog?.id) {
+			updateHash(this._dialog.id, false);
 		}
 
 		this.dispatchEvent(

@@ -3,6 +3,8 @@ import {
 	verticalKeyNavigation,
 	horizontalKeyNavigation,
 } from '../../utils/keyboard.js';
+import { register, unregister, updateHash } from '../../utils/deeplink.js';
+import { FOCUSABLE_SELECTOR } from '../../utils/focus.js';
 
 /**
  * Tabs component — APG Tabs Pattern.
@@ -18,6 +20,7 @@ import {
  * @attr {'horizontal'|'vertical'} orientation - Arrow key direction. Defaults to horizontal.
  * @attr {boolean} loop-navigation   - Wraps arrow keys at boundaries.
  * @attr {boolean} hidden-until-found - Uses hidden="until-found" for inactive panels.
+ * @attr {boolean} deeplink          - Sync active tab with URL hash (uses panel ID).
  *
  * @fires tabs:change - After a tab activates. detail: { tab, panel, index }
  */
@@ -25,9 +28,12 @@ export class PariTabs extends HTMLElement {
 	private _handleClick = this._onClick.bind(this);
 	private _handleKeydown = this._onKeydown.bind(this);
 	private _handleBeforeMatch = this._onBeforeMatch.bind(this);
+	private _deeplinkHandlers: Array<{ selector: string; handler: () => void }> = [];
+	private _cachedTablist: HTMLElement | null = null;
 
 	connectedCallback() {
-		const tablist = this._tablist;
+		this._cachedTablist = this.querySelector<HTMLElement>('[data-tablist]');
+		const tablist = this._cachedTablist;
 		if (!tablist) return;
 
 		tablist.setAttribute('role', 'tablist');
@@ -64,21 +70,41 @@ export class PariTabs extends HTMLElement {
 				panel.addEventListener('beforematch', this._handleBeforeMatch);
 			});
 		}
+
+		if (this.hasAttribute('deeplink')) {
+			panels.forEach((panel, i) => {
+				const selector = `[data-panel]#${panel.id}`;
+				const handler = () => {
+					this._activate(i);
+					tabs[i]?.focus();
+				};
+				this._deeplinkHandlers.push({ selector, handler });
+				register(selector, handler);
+			});
+		}
 	}
 
 	disconnectedCallback() {
 		this.removeEventListener('click', this._handleClick);
 		this.removeEventListener('keydown', this._handleKeydown);
 
+		this._cachedTablist?.removeAttribute('aria-orientation');
+		this._cachedTablist = null;
+
 		if (this.hasAttribute('hidden-until-found')) {
 			this._panels.forEach((panel) => {
 				panel.removeEventListener('beforematch', this._handleBeforeMatch);
 			});
 		}
+
+		for (const { selector, handler } of this._deeplinkHandlers) {
+			unregister(selector, handler);
+		}
+		this._deeplinkHandlers = [];
 	}
 
 	private get _tablist(): HTMLElement | null {
-		return this.querySelector<HTMLElement>('[data-tablist]');
+		return this._cachedTablist ?? this.querySelector<HTMLElement>('[data-tablist]');
 	}
 
 	private get _tabs(): HTMLElement[] {
@@ -126,6 +152,10 @@ export class PariTabs extends HTMLElement {
 					},
 				})
 			);
+
+			if (this.hasAttribute('deeplink') && panels[index]) {
+				updateHash(panels[index].id, true);
+			}
 		}
 	}
 
@@ -135,9 +165,7 @@ export class PariTabs extends HTMLElement {
 			return;
 		}
 
-		const hasFocusable = panel.querySelector(
-			'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
-		);
+		const hasFocusable = panel.querySelector(FOCUSABLE_SELECTOR);
 
 		if (hasFocusable) {
 			panel.removeAttribute('tabindex');
