@@ -1,5 +1,6 @@
 import { html } from 'lit';
 import type { Meta, StoryObj } from '@storybook/web-components';
+import { expect, userEvent } from 'storybook/test';
 
 import '../src/components/popover/popover';
 
@@ -20,6 +21,19 @@ export const Default: Story = {
 			</div>
 		</pari-popover>
 	`,
+	play: async ({ canvasElement }) => {
+		const trigger = canvasElement.querySelector('[data-trigger]') as HTMLElement;
+		const content = canvasElement.querySelector('[data-content]') as HTMLElement;
+
+		await expect(trigger).toHaveAttribute('popovertarget');
+		await expect(content).toHaveAttribute('popover', 'auto');
+
+		trigger.click();
+		expect(content.matches(':popover-open')).toBe(true);
+
+		trigger.click();
+		expect(content.matches(':popover-open')).toBe(false);
+	},
 };
 
 export const Hover: Story = {

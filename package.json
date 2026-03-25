@@ -20,19 +20,21 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "test": "playwright test",
+    "test": "vitest --project=storybook --run",
+    "test:watch": "vitest --project=storybook",
     "storybook": "storybook dev -p 6006 --host 0.0.0.0",
     "build-storybook": "storybook build"
   },
   "devDependencies": {
-    "@axe-core/playwright": "^4.11.1",
-    "@playwright/test": "^1.58.2",
     "@storybook/addon-a11y": "^10.3.3",
+    "@storybook/addon-vitest": "^10.3.3",
     "@storybook/web-components-vite": "^10.3.3",
+    "@vitest/browser-playwright": "^4.1.1",
     "lit": "^3.3.2",
     "storybook": "^10.3.3",
     "typescript": "^6.0.2",
     "vite": "^8.0.2",
-    "vite-plugin-dts": "^4.5.4"
+    "vite-plugin-dts": "^4.5.4",
+    "vitest": "^4.1.1"
   }
 }

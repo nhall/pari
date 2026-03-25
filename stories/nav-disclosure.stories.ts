@@ -1,5 +1,6 @@
 import { html } from 'lit';
 import type { Meta, StoryObj } from '@storybook/web-components';
+import { expect, userEvent } from 'storybook/test';
 
 import '../src/components/nav-disclosure/nav-disclosure';
 import '../src/components/disclosure/disclosure';
@@ -64,4 +65,37 @@ export const Default: Story = {
 			</pari-disclosure>
 		</pari-nav-disclosure>
 	`,
+	play: async ({ canvasElement }) => {
+		const triggers = Array.from(canvasElement.querySelectorAll('[data-trigger]')) as HTMLElement[];
+		const disclosures = Array.from(canvasElement.querySelectorAll('pari-disclosure')) as HTMLElement[];
+
+		for (const trigger of triggers) {
+			await expect(trigger).toHaveAttribute('aria-haspopup', 'true');
+			await expect(trigger).toHaveAttribute('aria-expanded', 'false');
+		}
+
+		triggers[0].click();
+		await expect(triggers[0]).toHaveAttribute('aria-expanded', 'true');
+
+		triggers[1].click();
+		await expect(disclosures[1]).toHaveAttribute('open');
+		await expect(disclosures[0]).not.toHaveAttribute('open');
+
+		triggers[1].click();
+
+		const items = canvasElement.querySelectorAll('pari-disclosure:first-child [data-item]') as NodeListOf<HTMLElement>;
+		triggers[0].focus();
+		triggers[0].dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
+		await expect(triggers[0]).toHaveAttribute('aria-expanded', 'true');
+		await expect(items[0]).toHaveFocus();
+
+		items[0].dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
+		await expect(items[1]).toHaveFocus();
+
+		items[1].dispatchEvent(new KeyboardEvent('keydown', { key: 'Home', bubbles: true }));
+		await expect(items[0]).toHaveFocus();
+
+		items[0].dispatchEvent(new KeyboardEvent('keydown', { key: 'End', bubbles: true }));
+		await expect(items[2]).toHaveFocus();
+	},
 };

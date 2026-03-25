@@ -1,5 +1,6 @@
 import { html } from 'lit';
 import type { Meta, StoryObj } from '@storybook/web-components';
+import { expect, userEvent } from 'storybook/test';
 
 import '../src/components/disclosure/disclosure';
 
@@ -22,6 +23,26 @@ export const Default: Story = {
 			</div>
 		</pari-disclosure>
 	`,
+	play: async ({ canvas }) => {
+		const trigger = canvas.getByRole('button', { name: 'Toggle details' });
+
+		await expect(trigger).toHaveAttribute('aria-expanded', 'false');
+		await expect(trigger).toHaveAttribute('aria-controls');
+
+		await userEvent.click(trigger);
+		await expect(trigger).toHaveAttribute('aria-expanded', 'true');
+
+		await userEvent.click(trigger);
+		await expect(trigger).toHaveAttribute('aria-expanded', 'false');
+
+		trigger.focus();
+		await userEvent.keyboard('{Enter}');
+		await expect(trigger).toHaveAttribute('aria-expanded', 'true');
+
+		await userEvent.keyboard('{Escape}');
+		await expect(trigger).toHaveAttribute('aria-expanded', 'false');
+		await expect(trigger).toHaveFocus();
+	},
 };
 
 export const StartsOpen: Story = {
@@ -35,6 +56,11 @@ export const StartsOpen: Story = {
 			</div>
 		</pari-disclosure>
 	`,
+	play: async ({ canvas }) => {
+		const trigger = canvas.getByRole('button', { name: 'Toggle details' });
+
+		await expect(trigger).toHaveAttribute('aria-expanded', 'true');
+	},
 };
 
 export const Persistent: Story = {
@@ -48,6 +74,15 @@ export const Persistent: Story = {
 			</div>
 		</pari-disclosure>
 	`,
+	play: async ({ canvas }) => {
+		const trigger = canvas.getByRole('button', { name: 'Toggle details' });
+
+		await userEvent.click(trigger);
+		await expect(trigger).toHaveAttribute('aria-expanded', 'true');
+
+		await userEvent.keyboard('{Escape}');
+		await expect(trigger).toHaveAttribute('aria-expanded', 'true');
+	},
 };
 
 export const HiddenUntilFound: Story = {
@@ -61,6 +96,18 @@ export const HiddenUntilFound: Story = {
 			</div>
 		</pari-disclosure>
 	`,
+	play: async ({ canvasElement }) => {
+		const content = canvasElement.querySelector('[data-content]')!;
+
+		await expect(content).toHaveAttribute('hidden', 'until-found');
+
+		const trigger = canvasElement.querySelector('[data-trigger]') as HTMLElement;
+		await userEvent.click(trigger);
+		expect(content.hasAttribute('hidden')).toBe(false);
+
+		await userEvent.click(trigger);
+		await expect(content).toHaveAttribute('hidden', 'until-found');
+	},
 };
 
 export const MediaQuery: Story = {
@@ -90,6 +137,34 @@ export const KeyboardNavigation: Story = {
 			</div>
 		</pari-disclosure>
 	`,
+	play: async ({ canvasElement }) => {
+		const trigger = canvasElement.querySelector('[data-trigger]') as HTMLElement;
+		await userEvent.click(trigger);
+
+		const items = canvasElement.querySelectorAll('[data-item]');
+
+		(items[0] as HTMLElement).focus();
+		await expect(items[0]).toHaveFocus();
+
+		await userEvent.keyboard('{ArrowDown}');
+		await expect(items[1]).toHaveFocus();
+
+		await userEvent.keyboard('{ArrowUp}');
+		await expect(items[0]).toHaveFocus();
+
+		await userEvent.keyboard('{ArrowUp}');
+		await expect(items[3]).toHaveFocus();
+
+		await userEvent.keyboard('{ArrowDown}');
+		await expect(items[0]).toHaveFocus();
+
+		(items[2] as HTMLElement).focus();
+		await userEvent.keyboard('{Home}');
+		await expect(items[0]).toHaveFocus();
+
+		await userEvent.keyboard('{End}');
+		await expect(items[3]).toHaveFocus();
+	},
 };
 
 export const Deeplink: Story = {
@@ -103,6 +178,17 @@ export const Deeplink: Story = {
 			</div>
 		</pari-disclosure>
 	`,
+	play: async ({ canvas }) => {
+		const trigger = canvas.getByRole('button', { name: 'Toggle details' });
+
+		await userEvent.click(trigger);
+		await expect(trigger).toHaveAttribute('aria-expanded', 'true');
+		expect(window.location.hash).toBe('#deeplink-panel');
+
+		await userEvent.click(trigger);
+		await expect(trigger).toHaveAttribute('aria-expanded', 'false');
+		expect(window.location.hash).toBe('');
+	},
 };
 
 export const Closer: Story = {
@@ -117,4 +203,15 @@ export const Closer: Story = {
 			</div>
 		</pari-disclosure>
 	`,
+	play: async ({ canvas }) => {
+		const trigger = canvas.getByRole('button', { name: 'Toggle details' });
+
+		await userEvent.click(trigger);
+		await expect(trigger).toHaveAttribute('aria-expanded', 'true');
+
+		const closer = canvas.getByRole('button', { name: 'Close' });
+		await userEvent.click(closer);
+		await expect(trigger).toHaveAttribute('aria-expanded', 'false');
+		await expect(trigger).toHaveFocus();
+	},
 };

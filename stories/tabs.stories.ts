@@ -1,5 +1,6 @@
 import { html } from 'lit';
 import type { Meta, StoryObj } from '@storybook/web-components';
+import { expect, userEvent } from 'storybook/test';
 
 import '../src/components/tabs/tabs';
 
@@ -36,6 +37,39 @@ export const Default: Story = {
 			</div>
 		</pari-tabs>
 	`,
+	play: async ({ canvasElement }) => {
+		const tabs = canvasElement.querySelectorAll('[data-tab]') as NodeListOf<HTMLElement>;
+		const panels = canvasElement.querySelectorAll('[data-panel]') as NodeListOf<HTMLElement>;
+
+		await expect(tabs[0]).toHaveAttribute('aria-selected', 'true');
+		await expect(panels[0]).not.toHaveAttribute('hidden');
+
+		await userEvent.click(tabs[1]);
+		await expect(tabs[1]).toHaveAttribute('aria-selected', 'true');
+		await expect(tabs[0]).toHaveAttribute('aria-selected', 'false');
+		await expect(panels[1]).not.toHaveAttribute('hidden');
+		await expect(panels[0]).toHaveAttribute('hidden', '');
+
+		await userEvent.click(tabs[0]);
+
+		tabs[0].focus();
+		await userEvent.keyboard('{ArrowRight}');
+		await expect(tabs[1]).toHaveFocus();
+		await expect(tabs[1]).toHaveAttribute('aria-selected', 'true');
+
+		await userEvent.keyboard('{ArrowLeft}');
+		await expect(tabs[0]).toHaveFocus();
+		await expect(tabs[0]).toHaveAttribute('aria-selected', 'true');
+
+		await userEvent.click(tabs[2]);
+		await userEvent.keyboard('{Home}');
+		await expect(tabs[0]).toHaveFocus();
+		await expect(tabs[0]).toHaveAttribute('aria-selected', 'true');
+
+		await userEvent.keyboard('{End}');
+		await expect(tabs[2]).toHaveFocus();
+		await expect(tabs[2]).toHaveAttribute('aria-selected', 'true');
+	},
 };
 
 export const Manual: Story = {
@@ -63,6 +97,24 @@ export const Manual: Story = {
 			</div>
 		</pari-tabs>
 	`,
+	play: async ({ canvasElement }) => {
+		const tabs = canvasElement.querySelectorAll('[data-tab]') as NodeListOf<HTMLElement>;
+
+		tabs[0].focus();
+		await userEvent.keyboard('{ArrowRight}');
+		await expect(tabs[1]).toHaveFocus();
+		await expect(tabs[0]).toHaveAttribute('aria-selected', 'true');
+		await expect(tabs[1]).toHaveAttribute('aria-selected', 'false');
+
+		await userEvent.keyboard('{Enter}');
+		await expect(tabs[1]).toHaveAttribute('aria-selected', 'true');
+
+		tabs[0].focus();
+		await userEvent.keyboard('{ArrowRight}');
+		await userEvent.keyboard('{ArrowRight}');
+		await userEvent.keyboard(' ');
+		await expect(tabs[2]).toHaveAttribute('aria-selected', 'true');
+	},
 };
 
 export const Vertical: Story = {
@@ -90,6 +142,21 @@ export const Vertical: Story = {
 			</div>
 		</pari-tabs>
 	`,
+	play: async ({ canvasElement }) => {
+		const tabs = canvasElement.querySelectorAll('[data-tab]') as NodeListOf<HTMLElement>;
+
+		tabs[0].focus();
+		await userEvent.keyboard('{ArrowDown}');
+		await expect(tabs[1]).toHaveFocus();
+		await expect(tabs[1]).toHaveAttribute('aria-selected', 'true');
+
+		await userEvent.keyboard('{ArrowUp}');
+		await expect(tabs[0]).toHaveFocus();
+		await expect(tabs[0]).toHaveAttribute('aria-selected', 'true');
+
+		await userEvent.keyboard('{ArrowRight}');
+		await expect(tabs[0]).toHaveFocus();
+	},
 };
 
 export const LoopNavigation: Story = {
@@ -117,6 +184,18 @@ export const LoopNavigation: Story = {
 			</div>
 		</pari-tabs>
 	`,
+	play: async ({ canvasElement }) => {
+		const tabs = canvasElement.querySelectorAll('[data-tab]') as NodeListOf<HTMLElement>;
+
+		await userEvent.click(tabs[2]);
+		await userEvent.keyboard('{ArrowRight}');
+		await expect(tabs[0]).toHaveFocus();
+		await expect(tabs[0]).toHaveAttribute('aria-selected', 'true');
+
+		await userEvent.keyboard('{ArrowLeft}');
+		await expect(tabs[2]).toHaveFocus();
+		await expect(tabs[2]).toHaveAttribute('aria-selected', 'true');
+	},
 };
 
 export const HiddenUntilFound: Story = {
@@ -144,6 +223,18 @@ export const HiddenUntilFound: Story = {
 			</div>
 		</pari-tabs>
 	`,
+	play: async ({ canvasElement }) => {
+		const tabs = canvasElement.querySelectorAll('[data-tab]') as NodeListOf<HTMLElement>;
+		const panels = canvasElement.querySelectorAll('[data-panel]') as NodeListOf<HTMLElement>;
+
+		await expect(panels[1]).toHaveAttribute('hidden', 'until-found');
+		await expect(panels[2]).toHaveAttribute('hidden', 'until-found');
+
+		await userEvent.click(tabs[1]);
+		await expect(panels[1]).not.toHaveAttribute('hidden');
+
+		await expect(panels[0]).toHaveAttribute('hidden', 'until-found');
+	},
 };
 
 export const Deeplink: Story = {
@@ -171,6 +262,15 @@ export const Deeplink: Story = {
 			</div>
 		</pari-tabs>
 	`,
+	play: async ({ canvasElement }) => {
+		const tabs = canvasElement.querySelectorAll('[data-tab]') as NodeListOf<HTMLElement>;
+
+		await userEvent.click(tabs[1]);
+		expect(window.location.hash).toBe('#dl-tab-2');
+
+		await userEvent.click(tabs[2]);
+		expect(window.location.hash).toBe('#dl-tab-3');
+	},
 };
 
 export const PanelWithFocusableContent: Story = {
@@ -192,4 +292,13 @@ export const PanelWithFocusableContent: Story = {
 			</div>
 		</pari-tabs>
 	`,
+	play: async ({ canvasElement }) => {
+		const tabs = canvasElement.querySelectorAll('[data-tab]') as NodeListOf<HTMLElement>;
+		const panels = canvasElement.querySelectorAll('[data-panel]') as NodeListOf<HTMLElement>;
+
+		expect(panels[0].hasAttribute('tabindex')).toBe(false);
+
+		await userEvent.click(tabs[1]);
+		await expect(panels[1]).toHaveAttribute('tabindex', '0');
+	},
 };

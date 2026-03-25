@@ -1,5 +1,6 @@
 import { html } from 'lit';
 import type { Meta, StoryObj } from '@storybook/web-components';
+import { expect, userEvent } from 'storybook/test';
 
 import '../src/components/accordion/accordion';
 import '../src/components/disclosure/disclosure';
@@ -41,6 +42,37 @@ export const Default: Story = {
 			</pari-disclosure>
 		</pari-accordion>
 	`,
+	play: async ({ canvasElement }) => {
+		const triggers = canvasElement.querySelectorAll('[data-trigger]') as NodeListOf<HTMLElement>;
+		const disclosures = canvasElement.querySelectorAll('pari-disclosure');
+
+		await userEvent.click(triggers[0]);
+		await userEvent.click(triggers[1]);
+		await expect(disclosures[0]).toHaveAttribute('open');
+		await expect(disclosures[1]).toHaveAttribute('open');
+
+		triggers[0].focus();
+		await expect(triggers[0]).toHaveFocus();
+		await userEvent.keyboard('{ArrowDown}');
+		await expect(triggers[1]).toHaveFocus();
+
+		await userEvent.keyboard('{ArrowUp}');
+		await expect(triggers[0]).toHaveFocus();
+
+		triggers[2].focus();
+		await userEvent.keyboard('{Home}');
+		await expect(triggers[0]).toHaveFocus();
+
+		await userEvent.keyboard('{End}');
+		await expect(triggers[2]).toHaveFocus();
+
+		await userEvent.keyboard('{ArrowDown}');
+		await expect(triggers[2]).toHaveFocus();
+
+		triggers[0].focus();
+		await userEvent.keyboard('{ArrowUp}');
+		await expect(triggers[0]).toHaveFocus();
+	},
 };
 
 export const Grouped: Story = {
@@ -72,6 +104,21 @@ export const Grouped: Story = {
 			</pari-disclosure>
 		</pari-accordion>
 	`,
+	play: async ({ canvasElement }) => {
+		const triggers = canvasElement.querySelectorAll('[data-trigger]') as NodeListOf<HTMLElement>;
+		const disclosures = canvasElement.querySelectorAll('pari-disclosure');
+
+		await expect(disclosures[0]).toHaveAttribute('open');
+
+		await userEvent.click(triggers[1]);
+		await expect(disclosures[1]).toHaveAttribute('open');
+		await expect(disclosures[0]).not.toHaveAttribute('open');
+
+		await userEvent.click(triggers[2]);
+		await expect(disclosures[2]).toHaveAttribute('open');
+		await expect(disclosures[1]).not.toHaveAttribute('open');
+		await expect(disclosures[0]).not.toHaveAttribute('open');
+	},
 };
 
 export const AlwaysOpen: Story = {
@@ -103,6 +150,22 @@ export const AlwaysOpen: Story = {
 			</pari-disclosure>
 		</pari-accordion>
 	`,
+	play: async ({ canvasElement }) => {
+		const triggers = canvasElement.querySelectorAll('[data-trigger]') as NodeListOf<HTMLElement>;
+		const disclosures = canvasElement.querySelectorAll('pari-disclosure');
+
+		await expect(disclosures[0]).toHaveAttribute('open');
+
+		await userEvent.click(triggers[0]);
+		await expect(disclosures[0]).toHaveAttribute('open');
+
+		await userEvent.click(triggers[1]);
+		await expect(disclosures[1]).toHaveAttribute('open');
+		await expect(disclosures[0]).not.toHaveAttribute('open');
+
+		await userEvent.click(triggers[1]);
+		await expect(disclosures[1]).toHaveAttribute('open');
+	},
 };
 
 export const Horizontal: Story = {
@@ -126,6 +189,19 @@ export const Horizontal: Story = {
 			</pari-disclosure>
 		</pari-accordion>
 	`,
+	play: async ({ canvasElement }) => {
+		const triggers = canvasElement.querySelectorAll('[data-trigger]') as NodeListOf<HTMLElement>;
+
+		triggers[0].focus();
+		await userEvent.keyboard('{ArrowRight}');
+		await expect(triggers[1]).toHaveFocus();
+
+		await userEvent.keyboard('{ArrowLeft}');
+		await expect(triggers[0]).toHaveFocus();
+
+		await userEvent.keyboard('{ArrowDown}');
+		await expect(triggers[0]).toHaveFocus();
+	},
 };
 
 export const LoopNavigation: Story = {
@@ -157,4 +233,14 @@ export const LoopNavigation: Story = {
 			</pari-disclosure>
 		</pari-accordion>
 	`,
+	play: async ({ canvasElement }) => {
+		const triggers = canvasElement.querySelectorAll('[data-trigger]') as NodeListOf<HTMLElement>;
+
+		triggers[2].focus();
+		await userEvent.keyboard('{ArrowDown}');
+		await expect(triggers[0]).toHaveFocus();
+
+		await userEvent.keyboard('{ArrowUp}');
+		await expect(triggers[2]).toHaveFocus();
+	},
 };

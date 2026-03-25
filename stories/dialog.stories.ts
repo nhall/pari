@@ -1,5 +1,6 @@
 import { html } from 'lit';
 import type { Meta, StoryObj } from '@storybook/web-components';
+import { expect, userEvent } from 'storybook/test';
 
 import '../src/components/dialog/dialog';
 
@@ -24,6 +25,21 @@ export const Default: Story = {
 			</dialog>
 		</pari-dialog>
 	`,
+	play: async ({ canvasElement }) => {
+		const trigger = canvasElement.querySelector('[data-trigger]') as HTMLElement;
+		const dialog = canvasElement.querySelector('dialog') as HTMLDialogElement;
+
+		await expect(dialog).toHaveAttribute('aria-modal', 'true');
+		await expect(trigger).toHaveAttribute('aria-haspopup', 'dialog');
+		expect(dialog.open).toBe(false);
+
+		trigger.click();
+		expect(dialog.open).toBe(true);
+
+		const closeButton = dialog.querySelector('[data-close]') as HTMLElement;
+		closeButton.click();
+		expect(dialog.open).toBe(false);
+	},
 };
 
 export const BackdropClose: Story = {
@@ -86,6 +102,15 @@ export const Autofocus: Story = {
 			</dialog>
 		</pari-dialog>
 	`,
+	play: async ({ canvasElement }) => {
+		const trigger = canvasElement.querySelector('[data-trigger]') as HTMLElement;
+		const input = canvasElement.querySelector('[autofocus]') as HTMLElement;
+
+		trigger.click();
+		await expect(input).toHaveFocus();
+
+		canvasElement.querySelector<HTMLElement>('dialog [data-close]')!.click();
+	},
 };
 
 export const LongContent: Story = {
