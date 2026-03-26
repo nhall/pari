@@ -9,7 +9,12 @@ _Pari_, from Latin, meaning "equal."
 ### ESM (bundler or modern browser)
 
 ```js
+// Everything
 import 'pari-components';
+
+// Or just what you need
+import 'pari-components/disclosure';
+import 'pari-components/tabs';
 ```
 
 ### Script tag (WordPress, Cascade CMS, static sites)

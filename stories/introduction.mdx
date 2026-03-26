@@ -1,0 +1,82 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Introduction" />
+
+# Pari
+
+Accessible web components built to [APG](https://www.w3.org/WAI/ARIA/apg/) standards. Vanilla TypeScript, zero runtime dependencies, zero CSS.
+
+_Pari_, from Latin, meaning "equal."
+
+## What this is
+
+Pari is a set of custom elements that handle the accessibility layer for common UI patterns: disclosure toggles, accordions, tabs, dialogs, popovers, and navigation menus. You write the HTML, Pari manages the ARIA attributes, keyboard interactions, and focus behavior.
+
+The components ship no CSS. You have full control over how they look. Style them using the native attributes Pari manages: `[aria-expanded]`, `[hidden]`, `[open]`, `[aria-selected]`, and the `data-*` attributes on child elements.
+
+## Install
+
+```bash
+npm install pari-components
+```
+
+## Quick start
+
+### ESM (bundler or modern browser)
+
+Import everything:
+
+```js
+import 'pari-components';
+```
+
+Or just the components you need:
+
+```js
+import 'pari-components/disclosure';
+import 'pari-components/tabs';
+```
+
+### Script tag
+
+```html
+<script src="/path/to/components.iife.js"></script>
+```
+
+The IIFE bundle registers all components automatically. No init script needed.
+
+### Use in markup
+
+```html
+<pari-disclosure>
+  <button data-trigger>Show more</button>
+  <div data-content hidden>
+    Your content here.
+  </div>
+</pari-disclosure>
+```
+
+That is it. The component handles `aria-expanded`, `aria-controls`, keyboard toggling, Escape to close, and focus management.
+
+## Design principles
+
+**Light DOM only.** No Shadow DOM, no encapsulation barriers. Your CSS applies directly to every element inside a Pari component.
+
+**Zero CSS shipped.** Style via the native attributes that Pari manages. This means no specificity fights, no overrides, no "how do I customize the look." You own the styles completely.
+
+**APG standards.** Every component follows the W3C ARIA Authoring Practices Guide. Keyboard interactions, focus management, and ARIA attributes match the spec.
+
+**Zero dependencies.** The entire library is vanilla TypeScript with no runtime dependencies. The IIFE bundle is under 20 kB.
+
+**Progressive enhancement.** Components use native browser features wherever possible: `<dialog>` for modals, the Popover API for popovers, `hidden="until-found"` for searchable collapsed content.
+
+## Components
+
+| Component | What it does |
+|-----------|-------------|
+| [Disclosure](?path=/docs/disclosure--docs) | A show/hide toggle. FAQ answers, expandable sections, mobile menus. |
+| [Accordion](?path=/docs/accordion--docs) | Grouped disclosure sections with keyboard navigation. |
+| [Tabs](?path=/docs/tabs--docs) | A tabbed interface with roving tabindex and panel management. |
+| [Dialog](?path=/docs/dialog--docs) | A modal dialog wrapping native `<dialog>` with scroll lock. |
+| [Popover](?path=/docs/popover--docs) | A lightweight popup wrapping the native Popover API. |
+| [Nav Disclosure](?path=/docs/nav-disclosure--docs) | Dropdown navigation with hover, keyboard, and focus management. |
