@@ -1,6 +1,6 @@
 import { html } from 'lit';
 import type { Meta, StoryObj } from '@storybook/web-components';
-import { expect, userEvent } from 'storybook/test';
+import { expect } from 'storybook/test';
 
 import '../src/components/popover/popover';
 
@@ -24,15 +24,32 @@ export const Default: Story = {
 	play: async ({ canvasElement }) => {
 		const trigger = canvasElement.querySelector('[data-trigger]') as HTMLElement;
 		const content = canvasElement.querySelector('[data-content]') as HTMLElement;
+		const pariPopover = canvasElement.querySelector('pari-popover') as any;
 
 		await expect(trigger).toHaveAttribute('popovertarget');
 		await expect(content).toHaveAttribute('popover', 'auto');
 
 		trigger.click();
 		expect(content.matches(':popover-open')).toBe(true);
+		expect(pariPopover.open).toBe(true);
 
 		trigger.click();
 		expect(content.matches(':popover-open')).toBe(false);
+		expect(pariPopover.open).toBe(false);
+
+		// No-op guards — prevents native InvalidStateError
+		pariPopover.show();
+		expect(pariPopover.open).toBe(true);
+
+		pariPopover.hide();
+		expect(pariPopover.open).toBe(false);
+
+		pariPopover.hide();
+		expect(pariPopover.open).toBe(false);
+		pariPopover.show();
+		pariPopover.show();
+		expect(pariPopover.open).toBe(true);
+		pariPopover.hide();
 	},
 };
 
@@ -45,6 +62,33 @@ export const Hover: Story = {
 			</div>
 		</pari-popover>
 	`,
+	play: async ({ canvasElement }) => {
+		const trigger = canvasElement.querySelector('[data-trigger]') as HTMLElement;
+		const content = canvasElement.querySelector('[data-content]') as HTMLElement;
+
+		// Hover mode bypasses popovertarget to avoid click-toggle conflicts
+		expect(trigger.hasAttribute('popovertarget')).toBe(false);
+
+		trigger.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true }));
+		expect(content.matches(':popover-open')).toBe(true);
+
+		trigger.dispatchEvent(new MouseEvent('mouseleave', { bubbles: true }));
+		await new Promise((r) => setTimeout(r, 200));
+		expect(content.matches(':popover-open')).toBe(false);
+
+		// Moving from trigger to content cancels the close debounce
+		trigger.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true }));
+		expect(content.matches(':popover-open')).toBe(true);
+
+		trigger.dispatchEvent(new MouseEvent('mouseleave', { bubbles: true }));
+		content.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true }));
+
+		await new Promise((r) => setTimeout(r, 200));
+		expect(content.matches(':popover-open')).toBe(true);
+
+		content.dispatchEvent(new MouseEvent('mouseleave', { bubbles: true }));
+		await new Promise((r) => setTimeout(r, 200));
+	},
 };
 
 export const CloseOnBlur: Story = {
@@ -57,6 +101,20 @@ export const CloseOnBlur: Story = {
 			</div>
 		</pari-popover>
 	`,
+	play: async ({ canvasElement }) => {
+		const trigger = canvasElement.querySelector('[data-trigger]') as HTMLElement;
+		const content = canvasElement.querySelector('[data-content]') as HTMLElement;
+
+		trigger.click();
+		expect(content.matches(':popover-open')).toBe(true);
+
+		// Focus inside popover should keep it open
+		content.querySelector<HTMLElement>('a')!.focus();
+		await new Promise((r) => setTimeout(r, 50));
+		expect(content.matches(':popover-open')).toBe(true);
+
+		trigger.click();
+	},
 };
 
 export const Closer: Story = {
@@ -69,6 +127,16 @@ export const Closer: Story = {
 			</div>
 		</pari-popover>
 	`,
+	play: async ({ canvasElement }) => {
+		const trigger = canvasElement.querySelector('[data-trigger]') as HTMLElement;
+		const content = canvasElement.querySelector('[data-content]') as HTMLElement;
+
+		trigger.click();
+		expect(content.matches(':popover-open')).toBe(true);
+
+		content.querySelector<HTMLElement>('[data-close]')!.click();
+		expect(content.matches(':popover-open')).toBe(false);
+	},
 };
 
 export const WithFocusableContent: Story = {

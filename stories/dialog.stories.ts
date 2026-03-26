@@ -1,6 +1,6 @@
 import { html } from 'lit';
 import type { Meta, StoryObj } from '@storybook/web-components';
-import { expect, userEvent } from 'storybook/test';
+import { expect } from 'storybook/test';
 
 import '../src/components/dialog/dialog';
 
@@ -11,6 +11,8 @@ const meta: Meta = {
 export default meta;
 
 type Story = StoryObj;
+
+const tick = () => new Promise((r) => setTimeout(r, 50));
 
 export const Default: Story = {
 	render: () => html`
@@ -28,17 +30,34 @@ export const Default: Story = {
 	play: async ({ canvasElement }) => {
 		const trigger = canvasElement.querySelector('[data-trigger]') as HTMLElement;
 		const dialog = canvasElement.querySelector('dialog') as HTMLDialogElement;
+		const pariDialog = canvasElement.querySelector('pari-dialog') as any;
 
 		await expect(dialog).toHaveAttribute('aria-modal', 'true');
 		await expect(trigger).toHaveAttribute('aria-haspopup', 'dialog');
 		expect(dialog.open).toBe(false);
 
 		trigger.click();
+		await tick();
+		expect(dialog.open).toBe(true);
+		expect(document.documentElement.classList.contains('state-locked')).toBe(true);
+
+		dialog.querySelector<HTMLElement>('[data-close]')!.click();
+		await tick();
+		expect(dialog.open).toBe(false);
+		expect(document.documentElement.classList.contains('state-locked')).toBe(false);
+
+		// No-op guards
+		pariDialog.hide();
+		expect(dialog.open).toBe(false);
+
+		pariDialog.show();
+		await tick();
+		expect(dialog.open).toBe(true);
+		pariDialog.show();
 		expect(dialog.open).toBe(true);
 
-		const closeButton = dialog.querySelector('[data-close]') as HTMLElement;
-		closeButton.click();
-		expect(dialog.open).toBe(false);
+		dialog.querySelector<HTMLElement>('[data-close]')!.click();
+		await tick();
 	},
 };
 
@@ -55,6 +74,32 @@ export const BackdropClose: Story = {
 			</dialog>
 		</pari-dialog>
 	`,
+	play: async ({ canvasElement }) => {
+		const trigger = canvasElement.querySelector('[data-trigger]') as HTMLElement;
+		const dialog = canvasElement.querySelector('dialog') as HTMLDialogElement;
+
+		trigger.click();
+		await tick();
+		expect(dialog.open).toBe(true);
+
+		// Synthetic clicks have clientX/Y of 0 which falls outside the dialog rect,
+		// so we must dispatch MouseEvents with explicit coordinates for this test.
+		const insideRect = dialog.getBoundingClientRect();
+		dialog.dispatchEvent(new MouseEvent('click', {
+			clientX: insideRect.left + insideRect.width / 2,
+			clientY: insideRect.top + insideRect.height / 2,
+			bubbles: true,
+		}));
+		expect(dialog.open).toBe(true);
+
+		dialog.dispatchEvent(new MouseEvent('click', {
+			clientX: insideRect.left - 10,
+			clientY: insideRect.top - 10,
+			bubbles: true,
+		}));
+		await tick();
+		expect(dialog.open).toBe(false);
+	},
 };
 
 export const NoScrollLock: Story = {
@@ -71,6 +116,18 @@ export const NoScrollLock: Story = {
 		</pari-dialog>
 		<div style="block-size: 200vh;"></div>
 	`,
+	play: async ({ canvasElement }) => {
+		const trigger = canvasElement.querySelector('[data-trigger]') as HTMLElement;
+		const dialog = canvasElement.querySelector('dialog') as HTMLDialogElement;
+
+		trigger.click();
+		await tick();
+		expect(dialog.open).toBe(true);
+		expect(document.documentElement.classList.contains('state-locked')).toBe(false);
+
+		dialog.querySelector<HTMLElement>('[data-close]')!.click();
+		await tick();
+	},
 };
 
 export const Deeplink: Story = {
@@ -86,6 +143,19 @@ export const Deeplink: Story = {
 			</dialog>
 		</pari-dialog>
 	`,
+	play: async ({ canvasElement }) => {
+		const trigger = canvasElement.querySelector('[data-trigger]') as HTMLElement;
+		const dialog = canvasElement.querySelector('dialog') as HTMLDialogElement;
+
+		trigger.click();
+		await tick();
+		expect(dialog.open).toBe(true);
+		expect(window.location.hash).toBe('#dl-dialog');
+
+		dialog.querySelector<HTMLElement>('[data-close]')!.click();
+		await tick();
+		expect(dialog.open).toBe(false);
+	},
 };
 
 export const Autofocus: Story = {
@@ -107,9 +177,11 @@ export const Autofocus: Story = {
 		const input = canvasElement.querySelector('[autofocus]') as HTMLElement;
 
 		trigger.click();
+		await tick();
 		await expect(input).toHaveFocus();
 
 		canvasElement.querySelector<HTMLElement>('dialog [data-close]')!.click();
+		await tick();
 	},
 };
 

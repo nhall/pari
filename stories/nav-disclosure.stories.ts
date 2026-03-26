@@ -1,6 +1,6 @@
 import { html } from 'lit';
 import type { Meta, StoryObj } from '@storybook/web-components';
-import { expect, userEvent } from 'storybook/test';
+import { expect } from 'storybook/test';
 
 import '../src/components/nav-disclosure/nav-disclosure';
 import '../src/components/disclosure/disclosure';
@@ -68,6 +68,8 @@ export const Default: Story = {
 	play: async ({ canvasElement }) => {
 		const triggers = Array.from(canvasElement.querySelectorAll('[data-trigger]')) as HTMLElement[];
 		const disclosures = Array.from(canvasElement.querySelectorAll('pari-disclosure')) as HTMLElement[];
+		const navEl = canvasElement.querySelector('pari-nav-disclosure') as HTMLElement;
+		const items = canvasElement.querySelectorAll('pari-disclosure:first-child [data-item]') as NodeListOf<HTMLElement>;
 
 		for (const trigger of triggers) {
 			await expect(trigger).toHaveAttribute('aria-haspopup', 'true');
@@ -82,8 +84,9 @@ export const Default: Story = {
 		await expect(disclosures[0]).not.toHaveAttribute('open');
 
 		triggers[1].click();
+		await expect(disclosures[1]).not.toHaveAttribute('open');
 
-		const items = canvasElement.querySelectorAll('pari-disclosure:first-child [data-item]') as NodeListOf<HTMLElement>;
+		// ArrowDown opens and focuses first child, ArrowUp focuses last
 		triggers[0].focus();
 		triggers[0].dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
 		await expect(triggers[0]).toHaveAttribute('aria-expanded', 'true');
@@ -92,10 +95,47 @@ export const Default: Story = {
 		items[0].dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
 		await expect(items[1]).toHaveFocus();
 
-		items[1].dispatchEvent(new KeyboardEvent('keydown', { key: 'Home', bubbles: true }));
+		items[1].dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp', bubbles: true }));
 		await expect(items[0]).toHaveFocus();
 
 		items[0].dispatchEvent(new KeyboardEvent('keydown', { key: 'End', bubbles: true }));
 		await expect(items[2]).toHaveFocus();
+
+		items[2].dispatchEvent(new KeyboardEvent('keydown', { key: 'Home', bubbles: true }));
+		await expect(items[0]).toHaveFocus();
+
+		// No wrap at boundary
+		items[0].dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp', bubbles: true }));
+		await expect(items[0]).toHaveFocus();
+
+		navEl.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+		await new Promise((r) => setTimeout(r, 50));
+		await expect(disclosures[0]).not.toHaveAttribute('open');
+		await expect(triggers[0]).toHaveFocus();
+
+		triggers[0].focus();
+		triggers[0].dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp', bubbles: true }));
+		await expect(triggers[0]).toHaveAttribute('aria-expanded', 'true');
+		await expect(items[2]).toHaveFocus();
+
+		// Hover open/close with debounce
+		disclosures[1].dispatchEvent(new MouseEvent('mouseenter', { bubbles: true }));
+		await expect(disclosures[1]).toHaveAttribute('open');
+		await expect(disclosures[0]).not.toHaveAttribute('open');
+
+		disclosures[1].dispatchEvent(new MouseEvent('mouseleave', { bubbles: true }));
+		await new Promise((r) => setTimeout(r, 200));
+		await expect(disclosures[1]).not.toHaveAttribute('open');
+
+		// Re-entering before debounce fires cancels the close
+		disclosures[2].dispatchEvent(new MouseEvent('mouseenter', { bubbles: true }));
+		await expect(disclosures[2]).toHaveAttribute('open');
+		disclosures[2].dispatchEvent(new MouseEvent('mouseleave', { bubbles: true }));
+		disclosures[2].dispatchEvent(new MouseEvent('mouseenter', { bubbles: true }));
+		await new Promise((r) => setTimeout(r, 200));
+		await expect(disclosures[2]).toHaveAttribute('open');
+
+		disclosures[2].dispatchEvent(new MouseEvent('mouseleave', { bubbles: true }));
+		await new Promise((r) => setTimeout(r, 200));
 	},
 };
