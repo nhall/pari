@@ -36,5 +36,5 @@ npm install
 npm run dev          # Vite dev server
 npm run storybook    # Component explorer
 npm run build        # Library build (ESM + IIFE)
-npm test             # Playwright tests
+npm test             # Vitest + Storybook tests
 ```
