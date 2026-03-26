@@ -4,13 +4,37 @@
   "description": "Accessible web component library",
   "type": "module",
   "main": "./dist/components.iife.js",
-  "module": "./dist/components.js",
+  "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/components.js",
+      "import": "./dist/index.js",
       "default": "./dist/components.iife.js"
+    },
+    "./disclosure": {
+      "types": "./dist/components/disclosure/disclosure.d.ts",
+      "import": "./dist/components/disclosure.js"
+    },
+    "./accordion": {
+      "types": "./dist/components/accordion/accordion.d.ts",
+      "import": "./dist/components/accordion.js"
+    },
+    "./tabs": {
+      "types": "./dist/components/tabs/tabs.d.ts",
+      "import": "./dist/components/tabs.js"
+    },
+    "./dialog": {
+      "types": "./dist/components/dialog/dialog.d.ts",
+      "import": "./dist/components/dialog.js"
+    },
+    "./popover": {
+      "types": "./dist/components/popover/popover.d.ts",
+      "import": "./dist/components/popover.js"
+    },
+    "./nav-disclosure": {
+      "types": "./dist/components/nav-disclosure/nav-disclosure.d.ts",
+      "import": "./dist/components/nav-disclosure.js"
     }
   },
   "files": [
@@ -18,7 +42,7 @@
   ],
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "tsc && vite build && vite build --config vite.config.iife.ts",
     "preview": "vite preview",
     "test": "vitest --project=storybook --run",
     "test:watch": "vitest --project=storybook",
