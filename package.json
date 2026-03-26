@@ -2,6 +2,25 @@
   "name": "pari-components",
   "version": "0.0.1",
   "description": "Accessible web component library",
+  "license": "MIT",
+  "author": "Nicholas Hall",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nhall/pari.git"
+  },
+  "keywords": [
+    "web-components",
+    "custom-elements",
+    "accessibility",
+    "a11y",
+    "aria",
+    "apg",
+    "disclosure",
+    "accordion",
+    "tabs",
+    "dialog",
+    "popover"
+  ],
   "type": "module",
   "main": "./dist/components.iife.js",
   "module": "./dist/index.js",
