@@ -42,6 +42,24 @@ export const Default: Story = {
 		await userEvent.keyboard('{Escape}');
 		await expect(trigger).toHaveAttribute('aria-expanded', 'false');
 		await expect(trigger).toHaveFocus();
+
+		// Outside click closes
+		await userEvent.click(trigger);
+		await expect(trigger).toHaveAttribute('aria-expanded', 'true');
+		document.body.click();
+		await new Promise((r) => setTimeout(r, 50));
+		await expect(trigger).toHaveAttribute('aria-expanded', 'false');
+
+		// Focus leaving closes (exercises onFocusOutside)
+		await userEvent.click(trigger);
+		await expect(trigger).toHaveAttribute('aria-expanded', 'true');
+		const outsideBtn = document.createElement('button');
+		outsideBtn.textContent = 'outside';
+		document.body.appendChild(outsideBtn);
+		outsideBtn.focus();
+		await new Promise((r) => setTimeout(r, 50));
+		await expect(trigger).toHaveAttribute('aria-expanded', 'false');
+		outsideBtn.remove();
 	},
 };
 
@@ -188,7 +206,7 @@ export const Deeplink: Story = {
 			</div>
 		</pari-disclosure>
 	`,
-	play: async ({ canvas }) => {
+	play: async ({ canvas, canvasElement }) => {
 		const trigger = canvas.getByRole('button', { name: 'Toggle details' });
 
 		await userEvent.click(trigger);
@@ -198,6 +216,15 @@ export const Deeplink: Story = {
 		await userEvent.click(trigger);
 		await expect(trigger).toHaveAttribute('aria-expanded', 'false');
 		expect(window.location.hash).toBe('');
+
+		// Simulate hash navigation opening the disclosure
+		history.replaceState(null, '', '#deeplink-panel');
+		window.dispatchEvent(new HashChangeEvent('hashchange'));
+		await new Promise((r) => setTimeout(r, 50));
+		await expect(trigger).toHaveAttribute('aria-expanded', 'true');
+
+		// Clean up
+		await userEvent.click(trigger);
 	},
 };
 

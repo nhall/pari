@@ -168,6 +168,35 @@ export const AlwaysOpen: Story = {
 	},
 };
 
+export const AlwaysOpenNoDefault: Story = {
+	render: () => html`
+		<pari-accordion always-open>
+			<pari-disclosure persistent>
+				<button data-trigger>Section 1</button>
+				<div data-content hidden>
+					<div class="sb-panel">
+						<p>No section starts open, so the first one opens automatically.</p>
+					</div>
+				</div>
+			</pari-disclosure>
+			<pari-disclosure persistent>
+				<button data-trigger>Section 2</button>
+				<div data-content hidden>
+					<div class="sb-panel">
+						<p>Content for section two.</p>
+					</div>
+				</div>
+			</pari-disclosure>
+		</pari-accordion>
+	`,
+	play: async ({ canvasElement }) => {
+		const disclosures = canvasElement.querySelectorAll('pari-disclosure');
+
+		await new Promise((r) => setTimeout(r, 50));
+		await expect(disclosures[0]).toHaveAttribute('open');
+	},
+};
+
 export const Horizontal: Story = {
 	render: () => html`
 		<pari-accordion orientation="horizontal" always-open>

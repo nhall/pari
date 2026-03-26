@@ -1,6 +1,7 @@
 {
   "name": "pari-components",
   "version": "0.0.1",
+  "private": true,
   "description": "Accessible web component library",
   "license": "MIT",
   "author": "Nicholas Hall",

@@ -113,7 +113,14 @@ export const CloseOnBlur: Story = {
 		await new Promise((r) => setTimeout(r, 50));
 		expect(content.matches(':popover-open')).toBe(true);
 
-		trigger.click();
+		// Focus outside closes
+		const outsideBtn = document.createElement('button');
+		outsideBtn.textContent = 'outside';
+		document.body.appendChild(outsideBtn);
+		outsideBtn.focus();
+		await new Promise((r) => setTimeout(r, 50));
+		expect(content.matches(':popover-open')).toBe(false);
+		outsideBtn.remove();
 	},
 };
 

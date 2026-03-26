@@ -24,7 +24,8 @@ export class PariAccordion extends HTMLElement {
 		this.addEventListener('keydown', this._handleKeydown);
 
 		if (this.hasAttribute('always-open')) {
-			this._enforceAlwaysOpen();
+			// Defer so child disclosures have time to initialize
+			setTimeout(() => this._enforceAlwaysOpen(), 0);
 		}
 	}
 

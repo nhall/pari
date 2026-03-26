@@ -234,6 +234,11 @@ export const HiddenUntilFound: Story = {
 		await expect(panels[1]).not.toHaveAttribute('hidden');
 
 		await expect(panels[0]).toHaveAttribute('hidden', 'until-found');
+
+		// Simulate browser find-in-page revealing a hidden panel
+		panels[2].dispatchEvent(new Event('beforematch', { bubbles: true }));
+		await expect(tabs[2]).toHaveAttribute('aria-selected', 'true');
+		await expect(panels[2]).not.toHaveAttribute('hidden');
 	},
 };
 
@@ -270,6 +275,12 @@ export const Deeplink: Story = {
 
 		await userEvent.click(tabs[2]);
 		expect(window.location.hash).toBe('#dl-tab-3');
+
+		// Simulate hash navigation activating a tab
+		history.replaceState(null, '', '#dl-tab-1');
+		window.dispatchEvent(new HashChangeEvent('hashchange'));
+		await new Promise((r) => setTimeout(r, 50));
+		await expect(tabs[0]).toHaveAttribute('aria-selected', 'true');
 	},
 };
 

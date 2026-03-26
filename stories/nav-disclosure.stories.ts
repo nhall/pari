@@ -137,5 +137,21 @@ export const Default: Story = {
 
 		disclosures[2].dispatchEvent(new MouseEvent('mouseleave', { bubbles: true }));
 		await new Promise((r) => setTimeout(r, 200));
+
+		// Focus leaving nav closes all (exercises _closeAll via _onBlur)
+		triggers[0].click();
+		await expect(disclosures[0]).toHaveAttribute('open');
+		const outsideBtn = document.createElement('button');
+		outsideBtn.textContent = 'outside';
+		document.body.appendChild(outsideBtn);
+		outsideBtn.focus();
+		await new Promise((r) => setTimeout(r, 50));
+		await expect(disclosures[0]).not.toHaveAttribute('open');
+		outsideBtn.remove();
+
+		// Exercise disconnectedCallback cleanup (remove and re-add)
+		const parent = navEl.parentElement!;
+		parent.removeChild(navEl);
+		parent.appendChild(navEl);
 	},
 };

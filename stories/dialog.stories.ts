@@ -155,6 +155,15 @@ export const Deeplink: Story = {
 		dialog.querySelector<HTMLElement>('[data-close]')!.click();
 		await tick();
 		expect(dialog.open).toBe(false);
+
+		// Simulate hash navigation opening the dialog
+		history.replaceState(null, '', '#dl-dialog');
+		window.dispatchEvent(new HashChangeEvent('hashchange'));
+		await tick();
+		expect(dialog.open).toBe(true);
+
+		dialog.querySelector<HTMLElement>('[data-close]')!.click();
+		await tick();
 	},
 };
 
