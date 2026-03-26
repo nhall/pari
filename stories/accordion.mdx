@@ -1,0 +1,82 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import * as AccordionStories from './accordion.stories';
+
+<Meta of={AccordionStories} />
+
+# Accordion
+
+A collapsible sections component for organizing content into expandable panels. Great for FAQs, settings pages, or anywhere you need to show one thing at a time without leaving the page.
+
+Built on top of `pari-disclosure`, the accordion adds group-level behavior: keyboard navigation between triggers, the option to close siblings when one opens, and a mode where one section must always stay open.
+
+Follows the [APG Accordion Pattern](https://www.w3.org/WAI/ARIA/apg/patterns/accordion/).
+
+## Markup
+
+```html
+<pari-accordion grouped>
+  <pari-disclosure persistent open>
+    <button data-trigger>Section 1</button>
+    <div data-content>Content one.</div>
+  </pari-disclosure>
+  <pari-disclosure persistent>
+    <button data-trigger>Section 2</button>
+    <div data-content hidden>Content two.</div>
+  </pari-disclosure>
+</pari-accordion>
+```
+
+Each child is a `pari-disclosure` with the `persistent` attribute. By default, a standalone disclosure closes itself on Escape, outside click, or focus loss. That makes sense for menus and popovers, but not for accordions. Accordion sections should stay open until you explicitly open another or click the trigger again. The `persistent` attribute disables the auto-close behavior so the accordion can manage it instead.
+
+## Attributes
+
+| Attribute | Type | Description |
+|-----------|------|-------------|
+| `grouped` | boolean | Only one section open at a time. Opening one closes the others. |
+| `always-open` | boolean | One section must always remain open. The active section cannot be collapsed. This also implies `grouped`. |
+| `orientation` | `vertical` or `horizontal` | Controls which arrow keys navigate between triggers. Defaults to vertical. |
+| `loop-navigation` | boolean | Arrow keys wrap around so you can go from the last trigger to the first and back. |
+
+## Keyboard
+
+| Key | What happens |
+|-----|--------------|
+| ArrowDown | Moves focus to the next trigger (vertical orientation). |
+| ArrowUp | Moves focus to the previous trigger. |
+| ArrowRight | Moves focus to the next trigger (horizontal orientation). |
+| ArrowLeft | Moves focus to the previous trigger. |
+| Home | Jumps to the first trigger. |
+| End | Jumps to the last trigger. |
+| Enter / Space | Opens or closes the focused section. |
+
+## Examples
+
+### Default
+
+All sections can be open at the same time. Arrow keys move focus between triggers.
+
+<Canvas of={AccordionStories.Default} />
+
+### Grouped
+
+Only one section can be open at a time. Opening a new one closes the previous.
+
+<Canvas of={AccordionStories.Grouped} />
+
+### Always open
+
+One section must always stay open. You can switch between sections, but you cannot collapse the active one.
+
+<Canvas of={AccordionStories.AlwaysOpen} />
+
+### Horizontal
+
+A side-by-side layout where sections expand horizontally. Arrow keys use Left/Right instead of Up/Down.
+
+<Canvas of={AccordionStories.Horizontal} />
+
+### Loop navigation
+
+Arrow keys wrap around at the boundaries. From the last trigger, pressing down takes you back to the first.
+
+<Canvas of={AccordionStories.LoopNavigation} />

@@ -4,7 +4,7 @@ import { register, unregister, updateHash } from '../../utils/deeplink.js';
 import { onFocusOutside } from '../../utils/focus.js';
 
 /**
- * Disclosure component — APG Disclosure Pattern.
+ * Disclosure component, APG Disclosure Pattern.
  * https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/
  *
  * Light DOM custom element. Manages aria-expanded, aria-controls,
@@ -228,7 +228,7 @@ export class PariDisclosure extends HTMLElement {
 	}
 
 	/**
-	 * querySelector scoped to this instance — skips children that
+	 * querySelector scoped to this instance. Skips children that
 	 * belong to a nested pari-disclosure.
 	 */
 	private _ownChild(selector: string): HTMLElement | null {

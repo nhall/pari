@@ -1,4 +1,4 @@
-/** Singleton module — all Pari components on a page share one handler registry. */
+/** Singleton module. All Pari components on a page share one handler registry. */
 
 type DeeplinkHandler = () => void;
 

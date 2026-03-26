@@ -1,0 +1,115 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import * as DisclosureStories from './disclosure.stories';
+
+<Meta of={DisclosureStories} />
+
+# Disclosure
+
+A simple show/hide toggle. Use it anytime you need to reveal content on demand: FAQ answers, expandable sections, filter panels, or mobile menus.
+
+Under the hood, Pari manages `aria-expanded`, `aria-controls`, and the `hidden` attribute so you can focus on your content and know the accessibility is handled.
+
+Follows the [APG Disclosure Pattern](https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/).
+
+## Markup
+
+```html
+<pari-disclosure>
+  <button data-trigger>Toggle details</button>
+  <div data-content hidden>
+    Content goes here.
+  </div>
+</pari-disclosure>
+```
+
+The trigger should be a `<button>`. The content panel starts with `hidden` and the component takes it from there. Both should be direct children of `pari-disclosure`.
+
+## Attributes
+
+| Attribute | Type | Description |
+|-----------|------|-------------|
+| `open` | boolean | Marks the disclosure as open. Set this if you want the panel visible on load. |
+| `persistent` | boolean | Keeps the panel open even when the user presses Escape, clicks outside, or moves focus away. Useful when another component (like accordion) manages closing. |
+| `hidden-until-found` | boolean | Uses `hidden="until-found"` so the browser's find-in-page can still search collapsed content. |
+| `keyboard-navigation` | boolean | Lets users navigate between `[data-item]` children with arrow keys, Home, and End. |
+| `loop-navigation` | boolean | Wraps arrow key navigation so it cycles from last to first and back. Requires `keyboard-navigation`. |
+| `media` | string | A CSS media query. The disclosure only activates while the query matches, so you can build patterns that collapse on small screens but stay visible on larger ones. |
+| `deeplink` | boolean | Ties the open state to the URL hash. If someone navigates to `#your-content-id`, the disclosure opens automatically. |
+| `no-collapse` | boolean | Prevents the trigger from closing the panel. Used internally by accordion's always-open mode. |
+
+## Data attributes
+
+| Attribute | Element | Purpose |
+|-----------|---------|---------|
+| `data-trigger` | button | The button that opens and closes the panel. |
+| `data-content` | any | The content panel. Pari hides and reveals it for you. |
+| `data-close` | any | An optional close button you can place inside the content. |
+| `data-item` | any | Marks focusable items for keyboard navigation. |
+
+## Events
+
+| Event | Detail | When it fires |
+|-------|--------|---------------|
+| `disclosure:open` | `{ instance }` | Right after the panel opens. |
+| `disclosure:close` | `{ instance }` | Right after the panel closes. |
+
+## Keyboard
+
+| Key | What happens |
+|-----|--------------|
+| Enter / Space | Opens or closes the panel (when the trigger has focus). |
+| Escape | Closes the panel and moves focus back to the trigger. |
+| ArrowDown | Moves to the next `[data-item]` (when `keyboard-navigation` is on). |
+| ArrowUp | Moves to the previous `[data-item]`. |
+| Home | Jumps to the first `[data-item]`. |
+| End | Jumps to the last `[data-item]`. |
+
+## Examples
+
+### Default
+
+Click the trigger to toggle the panel open and closed. Escape closes it and returns focus to the trigger.
+
+<Canvas of={DisclosureStories.Default} />
+
+### Starts open
+
+Sometimes you want the content visible right away. Add the `open` attribute and the panel renders expanded on load.
+
+<Canvas of={DisclosureStories.StartsOpen} />
+
+### Persistent
+
+With `persistent`, the panel stays open no matter what. Escape, clicking outside, and focus loss will not close it. Only clicking the trigger will. This is the mode accordion uses for its child sections.
+
+<Canvas of={DisclosureStories.Persistent} />
+
+### Hidden until found
+
+The content is collapsed but still searchable. Try using your browser's find-in-page (Ctrl+F or Cmd+F) to search for text inside the hidden panel.
+
+<Canvas of={DisclosureStories.HiddenUntilFound} />
+
+### Media query
+
+On small screens, the content is behind a toggle. On larger screens, the trigger hides and the content is always visible. This is a common pattern for mobile navigation or collapsible sidebars. Resize your browser to see it in action.
+
+<Canvas of={DisclosureStories.MediaQuery} />
+
+### Keyboard navigation
+
+When the panel is open, arrow keys move focus between `[data-item]` elements inside the content. Home and End jump to the first and last items. Loop navigation wraps around at the boundaries.
+
+<Canvas of={DisclosureStories.KeyboardNavigation} />
+
+### Deeplink
+
+The open state syncs with the URL hash. Opening the panel updates the hash, and navigating to a URL with that hash opens the panel automatically.
+
+<Canvas of={DisclosureStories.Deeplink} />
+
+### Close button
+
+Place an element with `[data-close]` inside the content and it becomes a close button. Focus returns to the trigger after closing.
+
+<Canvas of={DisclosureStories.Closer} />

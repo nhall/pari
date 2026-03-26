@@ -2,7 +2,7 @@ import { verticalKeyNavigation, horizontalKeyNavigation } from '../../utils/keyb
 import type { PariDisclosureElement } from '../../types.js';
 
 /**
- * Accordion component — APG Accordion Pattern.
+ * Accordion component, APG Accordion Pattern.
  * https://www.w3.org/WAI/ARIA/apg/patterns/accordion/
  *
  * Wraps multiple `<pari-disclosure>` children with group-level behavior:

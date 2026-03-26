@@ -7,7 +7,7 @@ import { register, unregister, updateHash } from '../../utils/deeplink.js';
 import { FOCUSABLE_SELECTOR } from '../../utils/focus.js';
 
 /**
- * Tabs component — APG Tabs Pattern.
+ * Tabs component, APG Tabs Pattern.
  * https://www.w3.org/WAI/ARIA/apg/patterns/tabs/
  *
  * Light DOM custom element. Manages roles, aria-selected, aria-controls,

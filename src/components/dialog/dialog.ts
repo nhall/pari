@@ -2,7 +2,7 @@ import { lockScroll, unlockScroll } from '../../utils/scroll-lock.js';
 import { register, unregister, updateHash } from '../../utils/deeplink.js';
 
 /**
- * Dialog component — APG Dialog (Modal) Pattern.
+ * Dialog component, APG Dialog (Modal) Pattern.
  * https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/
  *
  * Light DOM custom element wrapping a native `<dialog>`. Focus trapping,

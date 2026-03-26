@@ -1,0 +1,96 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import * as DialogStories from './dialog.stories';
+
+<Meta of={DialogStories} />
+
+# Dialog
+
+A modal dialog built on the native `<dialog>` element. Use it for confirmations, forms, alerts, or any content that needs the user's full attention before they continue.
+
+The browser handles the hard parts: focus trapping, Escape to close, and restoring focus to the trigger when the dialog closes. Pari layers on scroll locking, backdrop click detection, trigger binding, and custom events.
+
+Follows the [APG Dialog (Modal) Pattern](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/).
+
+## Markup
+
+```html
+<pari-dialog>
+  <button data-trigger>Open dialog</button>
+  <dialog id="my-dialog" aria-labelledby="my-title">
+    <h2 id="my-title">Title</h2>
+    <p>Content</p>
+    <button data-close>Close</button>
+  </dialog>
+</pari-dialog>
+```
+
+The `<dialog>` element needs an `id` and `aria-labelledby` pointing to a heading inside it. If you want a specific element to receive focus when the dialog opens, add the native `autofocus` attribute to it.
+
+## Attributes
+
+| Attribute | Type | Description |
+|-----------|------|-------------|
+| `close-on-backdrop` | boolean | Lets users close the dialog by clicking the backdrop area outside the content. |
+| `no-scroll-lock` | boolean | Keeps the page scrollable behind the dialog. By default, scrolling is locked when the dialog is open. |
+| `deeplink` | boolean | Ties the open state to the URL hash using the dialog ID. Navigate to `#my-dialog` and it opens automatically. |
+
+## Data attributes
+
+| Attribute | Element | Purpose |
+|-----------|---------|---------|
+| `data-trigger` | button | The button that opens the dialog. Pari adds `aria-haspopup="dialog"` for you. |
+| `data-close` | any | Any element inside the dialog that should close it when clicked. |
+
+## Events
+
+| Event | Detail | When it fires |
+|-------|--------|---------------|
+| `dialog:open` | `{ instance }` | Right after the dialog opens. |
+| `dialog:close` | `{ instance }` | Right after the dialog closes. |
+
+## Keyboard
+
+These are both handled by the browser's native `<dialog>` element:
+
+| Key | What happens |
+|-----|--------------|
+| Escape | Closes the dialog and returns focus to the trigger. |
+| Tab | Cycles through focusable elements inside the dialog. Focus cannot leave. |
+
+## Examples
+
+### Default
+
+Click the button to open the dialog. The page scrolls locks, focus moves inside, and Escape or the close button dismisses it.
+
+<Canvas of={DialogStories.Default} />
+
+### Backdrop close
+
+Clicking outside the dialog content closes it. Useful for non-critical dialogs where a quick dismissal feels natural.
+
+<Canvas of={DialogStories.BackdropClose} />
+
+### No scroll lock
+
+The page behind the dialog remains scrollable. This can be useful for dialogs that overlay content the user might want to reference.
+
+<Canvas of={DialogStories.NoScrollLock} />
+
+### Deeplink
+
+The dialog opens automatically when the URL hash matches the dialog ID. Opening and closing updates the hash.
+
+<Canvas of={DialogStories.Deeplink} />
+
+### Autofocus
+
+The input field receives focus immediately when the dialog opens, thanks to the native `autofocus` attribute.
+
+<Canvas of={DialogStories.Autofocus} />
+
+### Long content
+
+When the dialog content is taller than the viewport, it scrolls internally. The dialog frame stays fixed.
+
+<Canvas of={DialogStories.LongContent} />

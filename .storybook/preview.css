@@ -29,12 +29,24 @@ body {
 	padding-inline: 1rem;
 }
 
+/* Docs tables — prevent horizontal scroll on narrow screens
+============================================================================= */
+
+.sbdocs-content table {
+	display: block;
+	overflow-inline: auto;
+}
+
 /* Disclosure
 ============================================================================= */
 
-pari-disclosure [data-trigger] {
-	inline-size: 100%;
+pari-disclosure {
+	display: inline-flex;
+	flex-direction: column;
+	min-inline-size: 20rem;
+}
 
+pari-disclosure [data-trigger] {
 	display: flex;
 	align-items: center;
 	gap: 0.5rem;

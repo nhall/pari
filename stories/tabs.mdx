@@ -1,0 +1,107 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import * as TabsStories from './tabs.stories';
+
+<Meta of={TabsStories} />
+
+# Tabs
+
+A tabbed interface for switching between panels of content without leaving the page. Use it for settings sections, product details, content categories, or any time you want to show one panel at a time with clear navigation.
+
+Pari handles all the ARIA plumbing for you: `role="tablist"`, `role="tab"`, `role="tabpanel"`, `aria-selected`, `aria-controls`, `aria-labelledby`, and roving tabindex. You write the markup, Pari handles the rest.
+
+Follows the [APG Tabs Pattern](https://www.w3.org/WAI/ARIA/apg/patterns/tabs/).
+
+## Markup
+
+```html
+<pari-tabs>
+  <div data-tablist>
+    <button data-tab aria-selected="true">Tab 1</button>
+    <button data-tab>Tab 2</button>
+  </div>
+  <div data-panel>Panel one content.</div>
+  <div data-panel>Panel two content.</div>
+</pari-tabs>
+```
+
+Tabs and panels are matched by position. The first tab controls the first panel, the second tab controls the second panel, and so on. Set `aria-selected="true"` on the tab you want active on load.
+
+## Attributes
+
+| Attribute | Type | Description |
+|-----------|------|-------------|
+| `manual` | boolean | Arrow keys move focus but do not switch tabs. The user must press Enter or Space to activate. By default, tabs activate automatically when focused. |
+| `orientation` | `horizontal` or `vertical` | Controls which arrow keys navigate between tabs. Defaults to horizontal. |
+| `loop-navigation` | boolean | Arrow keys wrap around at the boundaries. |
+| `hidden-until-found` | boolean | Inactive panels use `hidden="until-found"` so the browser's find-in-page can still search their content. |
+| `deeplink` | boolean | Ties the active tab to the URL hash using the panel ID. If someone shares a link with a hash, the right tab activates automatically. |
+
+## Data attributes
+
+| Attribute | Element | Purpose |
+|-----------|---------|---------|
+| `data-tablist` | div | Container for the tab buttons. Pari adds `role="tablist"`. |
+| `data-tab` | button | A tab button. Pari adds `role="tab"` and manages `aria-selected` and tabindex. |
+| `data-panel` | div | A tab panel. Pari adds `role="tabpanel"` and manages visibility. |
+
+## Events
+
+| Event | Detail | When it fires |
+|-------|--------|---------------|
+| `tabs:change` | `{ tab, panel, index }` | Right after a new tab is activated. |
+
+## Keyboard
+
+| Key | What happens |
+|-----|--------------|
+| ArrowRight | Moves to the next tab (horizontal mode). In automatic mode, this also activates the tab. |
+| ArrowLeft | Moves to the previous tab. |
+| ArrowDown | Moves to the next tab (vertical mode). |
+| ArrowUp | Moves to the previous tab (vertical mode). |
+| Home | Jumps to the first tab. |
+| End | Jumps to the last tab. |
+| Enter / Space | Activates the focused tab (only needed in manual mode). |
+
+## Examples
+
+### Default
+
+Tabs activate automatically when you arrow to them. Click or keyboard navigation both work.
+
+<Canvas of={TabsStories.Default} />
+
+### Manual
+
+Arrow keys move focus between tabs, but the panel does not change until you press Enter or Space. This is useful when switching tabs is expensive or disruptive.
+
+<Canvas of={TabsStories.Manual} />
+
+### Vertical
+
+Tabs stack vertically with ArrowUp/Down navigation. The tablist gets `aria-orientation="vertical"` automatically.
+
+<Canvas of={TabsStories.Vertical} />
+
+### Loop navigation
+
+Arrow keys wrap around. From the last tab, pressing right takes you back to the first.
+
+<Canvas of={TabsStories.LoopNavigation} />
+
+### Hidden until found
+
+Inactive panels are hidden but still searchable. Try using your browser's find-in-page (Ctrl+F or Cmd+F) to search for text in a hidden panel. The browser will reveal the right tab automatically.
+
+<Canvas of={TabsStories.HiddenUntilFound} />
+
+### Deeplink
+
+The active tab syncs with the URL hash. Switching tabs updates the hash, and loading a URL with a hash activates the right tab.
+
+<Canvas of={TabsStories.Deeplink} />
+
+### Panel tabindex
+
+If a panel has focusable content (links, buttons, inputs), tabbing from the tab goes straight to that content. If a panel has no focusable content, the panel itself becomes focusable so keyboard users can still reach it.
+
+<Canvas of={TabsStories.PanelWithFocusableContent} />

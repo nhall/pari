@@ -2,7 +2,7 @@ import { uid } from '../../utils/uid.js';
 import { onFocusOutside } from '../../utils/focus.js';
 
 /**
- * Popover component — wraps the native Popover API.
+ * Popover component. Wraps the native Popover API.
  * https://developer.mozilla.org/en-US/docs/Web/API/Popover_API
  *
  * Light DOM custom element. Automatically wires the trigger to

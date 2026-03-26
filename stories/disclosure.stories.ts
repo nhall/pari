@@ -112,11 +112,21 @@ export const HiddenUntilFound: Story = {
 
 export const MediaQuery: Story = {
 	render: () => html`
-		<pari-disclosure media="(max-width: 740px)">
+		<style>
+			.sb-media-demo [data-trigger] {
+				display: none;
+			}
+			@media (max-width: 740px) {
+				.sb-media-demo [data-trigger] {
+					display: flex;
+				}
+			}
+		</style>
+		<pari-disclosure class="sb-media-demo" media="(max-width: 740px)">
 			<button data-trigger>Toggle details</button>
-			<div data-content hidden>
+			<div data-content>
 				<div class="sb-panel">
-					<p>This disclosure only activates below 740px. Resize your browser to see it enable/disable.</p>
+					<p>On small screens, this content is behind a toggle. On larger screens, the trigger hides and the content is always visible. Resize your browser to see it switch.</p>
 				</div>
 			</div>
 		</pari-disclosure>

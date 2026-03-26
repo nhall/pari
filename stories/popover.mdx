@@ -1,0 +1,86 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import * as PopoverStories from './popover.stories';
+
+<Meta of={PopoverStories} />
+
+# Popover
+
+A lightweight popup built on the [native Popover API](https://developer.mozilla.org/en-US/docs/Web/API/Popover_API). Use it for tooltips, dropdown menus, quick actions, or any content that should float near a trigger without taking over the page.
+
+The browser handles Enter/Space, Escape, and light-dismiss (clicking outside closes it). Pari adds hover mode, close-on-blur, close button support, anchor positioning, and custom events.
+
+## Markup
+
+```html
+<pari-popover>
+  <button data-trigger>Toggle</button>
+  <div data-content popover="auto">
+    Popover content.
+  </div>
+</pari-popover>
+```
+
+The content element needs `popover="auto"` so the browser knows it is a popover. Pari automatically wires `popovertarget` on the trigger and sets up CSS anchor positioning so the popover appears next to its trigger.
+
+## Attributes
+
+| Attribute | Type | Description |
+|-----------|------|-------------|
+| `hover` | boolean | Opens the popover on mouseenter and closes it on mouseleave with a 150ms debounce. The popover stays open while the cursor moves between the trigger and content. |
+| `close-on-blur` | boolean | Closes the popover when focus moves outside both the popover and the trigger. Useful for menus with focusable links. |
+
+## Data attributes
+
+| Attribute | Element | Purpose |
+|-----------|---------|---------|
+| `data-trigger` | button | The button that toggles the popover. Pari adds `popovertarget` for you. |
+| `data-content` | any | The popover content. Must have `popover="auto"`. |
+| `data-close` | any | An optional close button you can place inside the popover. |
+
+## Events
+
+| Event | Detail | When it fires |
+|-------|--------|---------------|
+| `popover:open` | `{ instance }` | Right after the popover opens. |
+| `popover:close` | `{ instance }` | Right after the popover closes. |
+
+## Keyboard
+
+All keyboard behavior comes from the native Popover API:
+
+| Key | What happens |
+|-----|--------------|
+| Enter / Space | Toggles the popover (when the trigger has focus). |
+| Escape | Closes the popover. |
+
+## Examples
+
+### Default
+
+Click the trigger to toggle. Clicking outside or pressing Escape closes it.
+
+<Canvas of={PopoverStories.Default} />
+
+### Hover
+
+The popover opens when you hover over the trigger and closes when you move away. There is a short debounce so it does not flicker when moving between the trigger and the content.
+
+<Canvas of={PopoverStories.Hover} />
+
+### Close on blur
+
+The popover closes when focus moves outside. Try tabbing through the link inside, then tabbing out.
+
+<Canvas of={PopoverStories.CloseOnBlur} />
+
+### Close button
+
+A `[data-close]` element inside the popover gives users an explicit way to dismiss it.
+
+<Canvas of={PopoverStories.Closer} />
+
+### With focusable content
+
+A popover with navigation links inside. Users can tab through the links and interact with them while the popover is open.
+
+<Canvas of={PopoverStories.WithFocusableContent} />

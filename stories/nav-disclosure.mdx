@@ -1,0 +1,75 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import * as NavDisclosureStories from './nav-disclosure.stories';
+
+<Meta of={NavDisclosureStories} />
+
+# Nav Disclosure
+
+A dropdown navigation menu where each item has a top-level link and a toggle button that reveals child links. Hover opens submenus automatically, and only one submenu can be open at a time.
+
+This is the pattern you see on most marketing sites: a horizontal nav bar where hovering or clicking reveals a dropdown of sub-pages. Pari handles the keyboard interactions, focus management, and ARIA attributes so the experience works for everyone.
+
+Follows the [APG Disclosure Navigation (Hybrid) Pattern](https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/examples/disclosure-navigation-hybrid/).
+
+## Markup
+
+```html
+<pari-nav-disclosure>
+  <pari-disclosure persistent>
+    <a href="/products">Products</a>
+    <button data-trigger aria-label="Products submenu">Toggle</button>
+    <div data-content hidden>
+      <a href="/software" data-item>Software</a>
+      <a href="/hardware" data-item>Hardware</a>
+    </div>
+  </pari-disclosure>
+</pari-nav-disclosure>
+```
+
+Each child is a `pari-disclosure` with the `persistent` attribute. The nav-disclosure component takes over all close behavior: closing siblings, handling Escape, watching for focus leaving the nav, and managing hover. The `persistent` attribute tells each disclosure to leave that work to its parent.
+
+## How it works
+
+- **Hover** opens the submenu and closes any open siblings. There is a 150ms debounce on close so the menu does not flicker when moving between items.
+- **Click** on the toggle opens or closes the submenu.
+- **Escape** closes the open submenu and moves focus back to its trigger.
+- **Focus leaving** the entire nav closes all submenus.
+- Only one submenu can be open at a time.
+
+## Data attributes
+
+| Attribute | Element | Purpose |
+|-----------|---------|---------|
+| `data-trigger` | button | The toggle button for the submenu. Pari adds `aria-haspopup="true"` for you. |
+| `data-content` | any | The submenu panel, hidden when closed. |
+| `data-item` | a | Child links inside the submenu. These are the elements that arrow keys navigate between. |
+
+## Keyboard
+
+### On the trigger
+
+| Key | What happens |
+|-----|--------------|
+| Enter / Space | Opens or closes the submenu. |
+| ArrowDown | Opens the submenu and moves focus to the first child link. |
+| ArrowUp | Opens the submenu and moves focus to the last child link. |
+
+### Inside the submenu
+
+| Key | What happens |
+|-----|--------------|
+| ArrowDown | Moves to the next child link. |
+| ArrowUp | Moves to the previous child link. |
+| Home | Jumps to the first child link. |
+| End | Jumps to the last child link. |
+| Escape | Closes the submenu and moves focus back to the trigger. |
+
+Arrow keys do not wrap at the boundaries. When you reach the last child link, pressing down does nothing.
+
+## Examples
+
+### Default
+
+Hover over a nav item to see its submenu. Click the toggle or use arrow keys to navigate. Try pressing Escape to close a submenu, or tab away from the nav to close everything.
+
+<Canvas of={NavDisclosureStories.Default} />

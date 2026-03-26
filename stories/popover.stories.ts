@@ -37,7 +37,7 @@ export const Default: Story = {
 		expect(content.matches(':popover-open')).toBe(false);
 		expect(pariPopover.open).toBe(false);
 
-		// No-op guards — prevents native InvalidStateError
+		// No-op guards, prevents native InvalidStateError
 		pariPopover.show();
 		expect(pariPopover.open).toBe(true);
 

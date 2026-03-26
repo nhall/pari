@@ -5,14 +5,14 @@ import type { PariDisclosureElement } from '../../types.js';
 const HOVER_DELAY = 150;
 
 /**
- * Navigation Disclosure component — APG Disclosure Navigation (Hybrid) Pattern.
+ * Navigation Disclosure component, APG Disclosure Navigation (Hybrid) Pattern.
  * https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/examples/disclosure-navigation-hybrid/
  *
  * Wraps multiple `<pari-disclosure persistent>` children for dropdown navigation.
  * Each disclosure contains a top-level link, a toggle button ([data-trigger]),
  * and a submenu ([data-content]) with child links ([data-item]).
  *
- * Child disclosures must use the `persistent` attribute — this component
+ * Child disclosures must use the `persistent` attribute. This component
  * owns all close behavior: sibling close, Escape, blur, and hover.
  *
  * @element pari-nav-disclosure
@@ -114,7 +114,7 @@ export class PariNavDisclosure extends HTMLElement {
 		const disclosure = trigger.closest('pari-disclosure') as PariDisclosureElement | null;
 		if (!disclosure || disclosure.parentElement !== this) return;
 
-		// Capture phase — prevent the child disclosure from handling its own click.
+		// Capture phase: prevent the child disclosure from handling its own click.
 		event.stopPropagation();
 
 		if (disclosure.open) {
