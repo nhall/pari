@@ -4,6 +4,20 @@ import './preview.css';
 const preview: Preview = {
 	tags: ['autodocs'],
 	parameters: {
+		options: {
+			storySort: {
+				order: [
+					'Introduction',
+					'Tokens',
+					'Disclosure',
+					'Accordion',
+					'Tabs',
+					'Dialog',
+					'Popover',
+					'Nav Disclosure',
+				],
+			},
+		},
 		controls: {
 			matchers: {
 				color: /(background|color)$/i,
