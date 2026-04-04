@@ -5,7 +5,7 @@ import { expect, userEvent } from 'storybook/test';
 import '../src/components/disclosure/disclosure';
 
 const meta: Meta = {
-	title: 'Disclosure',
+	title: 'Disclosure'
 };
 
 export default meta;
@@ -60,7 +60,7 @@ export const Default: Story = {
 		await new Promise((r) => setTimeout(r, 50));
 		await expect(trigger).toHaveAttribute('aria-expanded', 'false');
 		outsideBtn.remove();
-	},
+	}
 };
 
 export const StartsOpen: Story = {
@@ -78,7 +78,7 @@ export const StartsOpen: Story = {
 		const trigger = canvas.getByRole('button', { name: 'Toggle details' });
 
 		await expect(trigger).toHaveAttribute('aria-expanded', 'true');
-	},
+	}
 };
 
 export const Persistent: Story = {
@@ -100,7 +100,7 @@ export const Persistent: Story = {
 
 		await userEvent.keyboard('{Escape}');
 		await expect(trigger).toHaveAttribute('aria-expanded', 'true');
-	},
+	}
 };
 
 export const HiddenUntilFound: Story = {
@@ -125,7 +125,7 @@ export const HiddenUntilFound: Story = {
 
 		await userEvent.click(trigger);
 		await expect(content).toHaveAttribute('hidden', 'until-found');
-	},
+	}
 };
 
 export const MediaQuery: Story = {
@@ -134,9 +134,15 @@ export const MediaQuery: Story = {
 			.sb-media-demo [data-trigger] {
 				display: none;
 			}
-			@media (max-width: 740px) {
+			@media (max-width: 739px) {
 				.sb-media-demo [data-trigger] {
 					display: flex;
+				}
+			}
+			@media (min-width: 740px) {
+				.sb-media-demo [data-content] .sb-panel {
+					border-width: 0;
+					padding: 0;
 				}
 			}
 		</style>
@@ -148,7 +154,7 @@ export const MediaQuery: Story = {
 				</div>
 			</div>
 		</pari-disclosure>
-	`,
+	`
 };
 
 export const KeyboardNavigation: Story = {
@@ -192,7 +198,7 @@ export const KeyboardNavigation: Story = {
 
 		await userEvent.keyboard('{End}');
 		await expect(items[3]).toHaveFocus();
-	},
+	}
 };
 
 export const Deeplink: Story = {
@@ -225,7 +231,7 @@ export const Deeplink: Story = {
 
 		// Clean up
 		await userEvent.click(trigger);
-	},
+	}
 };
 
 export const Closer: Story = {
@@ -250,5 +256,5 @@ export const Closer: Story = {
 		await userEvent.click(closer);
 		await expect(trigger).toHaveAttribute('aria-expanded', 'false');
 		await expect(trigger).toHaveFocus();
-	},
+	}
 };

@@ -1,9 +1,13 @@
 import type { Preview } from '@storybook/web-components';
+import theme from './theme';
 import './preview.css';
 
 const preview: Preview = {
 	tags: ['autodocs'],
 	parameters: {
+		docs: {
+			theme,
+		},
 		options: {
 			storySort: {
 				order: [

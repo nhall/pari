@@ -4,6 +4,163 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 # Colors
 
-Color tokens for the Pari design system. All values use oklch.
+Pari's color palette is inspired by the bird of paradise plant. All values use oklch. The palette splits into **decorative** colors (logos, gradients, backgrounds) and **accessible** variants (text, links, interactive elements on white).
 
-*This page will be populated when branding is finalized.*
+## Brand palette
+
+<div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '1rem', marginBlockEnd: '2rem' }}>
+	<div>
+		<div style={{ background: '#F97316', blockSize: '80px', borderRadius: '6px' }} />
+		<p style={{ fontSize: '0.875rem', marginBlockStart: '0.5rem' }}>
+			<strong>Vibrant Orange</strong>
+			<br />
+			<code>#F97316</code>
+			<br />
+			<code>oklch(0.72 0.19 55)</code>
+			<br />
+			Decorative only
+		</p>
+	</div>
+	<div>
+		<div style={{ background: '#FB7185', blockSize: '80px', borderRadius: '6px' }} />
+		<p style={{ fontSize: '0.875rem', marginBlockStart: '0.5rem' }}>
+			<strong>Warm Coral</strong>
+			<br />
+			<code>#FB7185</code>
+			<br />
+			<code>oklch(0.70 0.15 12)</code>
+			<br />
+			Decorative only
+		</p>
+	</div>
+	<div>
+		<div style={{ background: '#1E293B', blockSize: '80px', borderRadius: '6px' }} />
+		<p style={{ fontSize: '0.875rem', marginBlockStart: '0.5rem' }}>
+			<strong>Deep Indigo</strong>
+			<br />
+			<code>#1E293B</code>
+			<br />
+			<code>oklch(0.24 0.03 260)</code>
+			<br />
+			Primary text, 14.63:1 on white
+		</p>
+	</div>
+	<div>
+		<div style={{ background: '#FDF8F5', blockSize: '80px', borderRadius: '6px', border: '1px solid #DAD8D6' }} />
+		<p style={{ fontSize: '0.875rem', marginBlockStart: '0.5rem' }}>
+			<strong>Soft Cream</strong>
+			<br />
+			<code>#FDF8F5</code>
+			<br />
+			<code>oklch(0.98 0.007 70)</code>
+			<br />
+			Backgrounds
+		</p>
+	</div>
+</div>
+
+## Accessible variants
+
+These pass WCAG 2.x AA (4.5:1) and APCA Lc 70+ for text on white backgrounds.
+
+<div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '1rem', marginBlockEnd: '2rem' }}>
+	<div>
+		<div style={{ background: '#C85200', blockSize: '80px', borderRadius: '6px' }} />
+		<p style={{ fontSize: '0.875rem', marginBlockStart: '0.5rem' }}>
+			<strong>Accessible Orange</strong>
+			<br />
+			<code>#C85200</code>
+			<br />
+			4.50:1 on white, Lc 70.4
+			<br />
+			Text, links, interactive elements
+		</p>
+	</div>
+	<div>
+		<div style={{ background: '#CC4559', blockSize: '80px', borderRadius: '6px' }} />
+		<p style={{ fontSize: '0.875rem', marginBlockStart: '0.5rem' }}>
+			<strong>Accessible Coral</strong>
+			<br />
+			<code>#CC4559</code>
+			<br />
+			4.60:1 on white, Lc 71.0
+			<br />
+			Text, links, interactive elements
+		</p>
+	</div>
+	<div>
+		<div style={{ background: '#706E6C', blockSize: '80px', borderRadius: '6px' }} />
+		<p style={{ fontSize: '0.875rem', marginBlockStart: '0.5rem' }}>
+			<strong>Muted Text</strong>
+			<br />
+			<code>#706E6C</code>
+			<br />
+			5.08:1 on white, Lc 75.1
+			<br />
+			Secondary text, captions
+		</p>
+	</div>
+</div>
+
+## Button backgrounds
+
+Accessible variant colors as button fills with white text. Pass WCAG AA (4.5:1 white text on color).
+
+<div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '1rem', marginBlockEnd: '2rem' }}>
+	<div>
+		<div style={{ background: '#C85200', blockSize: '80px', borderRadius: '6px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 600 }}>Button</div>
+		<p style={{ fontSize: '0.875rem', marginBlockStart: '0.5rem' }}>
+			<strong>Orange Button</strong>
+			<br />
+			<code>#C85200</code>
+			<br />
+			<code>oklch(0.58 0.17 45)</code>
+			<br />
+			4.50:1 white text
+		</p>
+	</div>
+	<div>
+		<div style={{ background: '#CC4559', blockSize: '80px', borderRadius: '6px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 600 }}>Button</div>
+		<p style={{ fontSize: '0.875rem', marginBlockStart: '0.5rem' }}>
+			<strong>Coral Button</strong>
+			<br />
+			<code>#CC4559</code>
+			<br />
+			<code>oklch(0.58 0.17 16)</code>
+			<br />
+			4.60:1 white text
+		</p>
+	</div>
+</div>
+
+Brand palette colors as button fills with Deep Indigo text. Pass WCAG AA (4.5:1 dark text on color).
+
+<div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '1rem', marginBlockEnd: '2rem' }}>
+	<div>
+		<div style={{ background: '#F97316', blockSize: '80px', borderRadius: '6px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#1E293B', fontWeight: 600 }}>Button</div>
+		<p style={{ fontSize: '0.875rem', marginBlockStart: '0.5rem' }}>
+			<strong>Orange Button</strong>
+			<br />
+			<code>#F97316</code> bg, <code>#1E293B</code> text
+			<br />
+			5.22:1 contrast
+		</p>
+	</div>
+	<div>
+		<div style={{ background: '#FB7185', blockSize: '80px', borderRadius: '6px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#1E293B', fontWeight: 600 }}>Button</div>
+		<p style={{ fontSize: '0.875rem', marginBlockStart: '0.5rem' }}>
+			<strong>Coral Button</strong>
+			<br />
+			<code>#FB7185</code> bg, <code>#1E293B</code> text
+			<br />
+			5.44:1 contrast
+		</p>
+	</div>
+</div>
+
+## Usage guidelines
+
+- **Decorative colors** (Vibrant Orange, Warm Coral) are for the logo, gradients, illustrations, and backgrounds paired with dark text. Never use them for text on white.
+- **Accessible variants** are for any text, link, or interactive element that must be readable against a white or cream background.
+- **Button backgrounds** come in two flavors: accessible variant fills with white text, or brand palette fills with Deep Indigo text. Both pass AA contrast.
+- Every color in this system was tested against both WCAG 2.x contrast ratios and the APCA readability algorithm.

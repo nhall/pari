@@ -4,6 +4,76 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 # Typography
 
-Type scale, font families, and weight tokens for the Pari design system.
+## Font families
 
-*This page will be populated when branding is finalized.*
+<div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem', marginBlockEnd: '3.5rem' }}>
+  <div>
+    <p style={{ fontFamily: 'Poppins, system-ui, sans-serif', fontSize: 'clamp(2rem, 1.593rem + 2.037vw, 3.375rem)', fontWeight: 700, lineHeight: 1.1, marginBlockEnd: '0.5rem' }}>Poppins</p>
+    <p style={{ fontFamily: 'Poppins, system-ui, sans-serif', fontSize: 'clamp(1.25rem, 1.028rem + 1.111vw, 2rem)', fontWeight: 600, lineHeight: 1.2 }}>Semi-Bold 600 / Bold 700</p>
+    <p style={{ fontSize: 'clamp(0.938rem, 0.901rem + 0.185vw, 1.063rem)', color: '#706E6C', marginBlockStart: '0.5rem' }}>Logo, display headings, page titles.</p>
+  </div>
+  <div>
+    <p style={{ fontFamily: 'Inter, system-ui, sans-serif', fontSize: 'clamp(2rem, 1.593rem + 2.037vw, 3.375rem)', fontWeight: 400, lineHeight: 1.1, marginBlockEnd: '0.5rem' }}>Inter</p>
+    <p style={{ fontFamily: 'Inter, system-ui, sans-serif', fontSize: 'clamp(1.25rem, 1.028rem + 1.111vw, 2rem)', fontWeight: 500, lineHeight: 1.2 }}>Regular 400 / Medium 500</p>
+    <p style={{ fontSize: 'clamp(0.938rem, 0.901rem + 0.185vw, 1.063rem)', color: '#706E6C', marginBlockStart: '0.5rem' }}>Body text, UI elements, documentation.</p>
+  </div>
+</div>
+
+## Type scale
+
+<table style={{ inlineSize: '100%', borderCollapse: 'collapse' }}>
+  <thead>
+    <tr>
+      <th style={{ textAlign: 'start', paddingBlock: '0.5rem', borderBlockEnd: '2px solid #DAD8D6' }}>Name</th>
+      <th style={{ textAlign: 'start', paddingBlock: '0.5rem', borderBlockEnd: '2px solid #DAD8D6' }}>Range</th>
+      <th style={{ textAlign: 'start', paddingBlock: '0.5rem', borderBlockEnd: '2px solid #DAD8D6' }}>Sample</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style={{ paddingBlock: '1rem', borderBlockEnd: '1px solid #DAD8D6', verticalAlign: 'baseline' }}>Display</td>
+      <td style={{ paddingBlock: '1rem', borderBlockEnd: '1px solid #DAD8D6', verticalAlign: 'baseline' }}><code>32px → 54px</code></td>
+      <td style={{ paddingBlock: '1rem', borderBlockEnd: '1px solid #DAD8D6', fontFamily: 'Poppins, sans-serif', fontSize: 'clamp(2rem, 1.593rem + 2.037vw, 3.375rem)', fontWeight: 700, verticalAlign: 'baseline' }}>Pari</td>
+    </tr>
+    <tr>
+      <td style={{ paddingBlock: '1rem', borderBlockEnd: '1px solid #DAD8D6', verticalAlign: 'baseline' }}>Heading 1</td>
+      <td style={{ paddingBlock: '1rem', borderBlockEnd: '1px solid #DAD8D6', verticalAlign: 'baseline' }}><code>24px → 40px</code></td>
+      <td style={{ paddingBlock: '1rem', borderBlockEnd: '1px solid #DAD8D6', fontFamily: 'Poppins, sans-serif', fontSize: 'clamp(1.5rem, 1.204rem + 1.481vw, 2.5rem)', fontWeight: 600, verticalAlign: 'baseline' }}>Accessible Web Components</td>
+    </tr>
+    <tr>
+      <td style={{ paddingBlock: '1rem', borderBlockEnd: '1px solid #DAD8D6', verticalAlign: 'baseline' }}>Heading 2</td>
+      <td style={{ paddingBlock: '1rem', borderBlockEnd: '1px solid #DAD8D6', verticalAlign: 'baseline' }}><code>20px → 32px</code></td>
+      <td style={{ paddingBlock: '1rem', borderBlockEnd: '1px solid #DAD8D6', fontFamily: 'Poppins, sans-serif', fontSize: 'clamp(1.25rem, 1.028rem + 1.111vw, 2rem)', fontWeight: 600, verticalAlign: 'baseline' }}>Component API</td>
+    </tr>
+    <tr>
+      <td style={{ paddingBlock: '1rem', borderBlockEnd: '1px solid #DAD8D6', verticalAlign: 'baseline' }}>Body</td>
+      <td style={{ paddingBlock: '1rem', borderBlockEnd: '1px solid #DAD8D6', verticalAlign: 'baseline' }}><code>17px → 20px</code></td>
+      <td style={{ paddingBlock: '1rem', borderBlockEnd: '1px solid #DAD8D6', fontFamily: 'Inter, sans-serif', fontSize: 'clamp(1.063rem, 1.007rem + 0.278vw, 1.25rem)', fontWeight: 400, verticalAlign: 'baseline' }}>Pari manages the ARIA attributes, keyboard interactions, and focus behavior.</td>
+    </tr>
+    <tr>
+      <td style={{ paddingBlock: '1rem', borderBlockEnd: '1px solid #DAD8D6', verticalAlign: 'baseline' }}>Body medium</td>
+      <td style={{ paddingBlock: '1rem', borderBlockEnd: '1px solid #DAD8D6', verticalAlign: 'baseline' }}><code>17px → 20px</code></td>
+      <td style={{ paddingBlock: '1rem', borderBlockEnd: '1px solid #DAD8D6', fontFamily: 'Inter, sans-serif', fontSize: 'clamp(1.063rem, 1.007rem + 0.278vw, 1.25rem)', fontWeight: 500, verticalAlign: 'baseline' }}>Labels, nav items, emphasis</td>
+    </tr>
+    <tr>
+      <td style={{ paddingBlock: '1rem', borderBlockEnd: '1px solid #DAD8D6', verticalAlign: 'baseline' }}>Small</td>
+      <td style={{ paddingBlock: '1rem', borderBlockEnd: '1px solid #DAD8D6', verticalAlign: 'baseline' }}><code>15px → 17px</code></td>
+      <td style={{ paddingBlock: '1rem', borderBlockEnd: '1px solid #DAD8D6', fontFamily: 'Inter, sans-serif', fontSize: 'clamp(0.938rem, 0.901rem + 0.185vw, 1.063rem)', fontWeight: 400, verticalAlign: 'baseline' }}>Captions, helper text, metadata</td>
+    </tr>
+  </tbody>
+</table>
+
+## CSS custom properties
+
+```css
+:root {
+  --pari-font-display: 'Poppins', system-ui, sans-serif;
+  --pari-font-body: 'Inter', system-ui, sans-serif;
+
+  --pari-text-display: clamp(2rem, 1.593rem + 2.037vw, 3.375rem);
+  --pari-text-h1: clamp(1.5rem, 1.204rem + 1.481vw, 2.5rem);
+  --pari-text-h2: clamp(1.25rem, 1.028rem + 1.111vw, 2rem);
+  --pari-text-body: clamp(1.063rem, 1.007rem + 0.278vw, 1.25rem);
+  --pari-text-small: clamp(0.938rem, 0.901rem + 0.185vw, 1.063rem);
+}
+```
