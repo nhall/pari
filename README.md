@@ -1,21 +1,46 @@
 # Pari
 
-Accessible web component library. Vanilla TypeScript, zero runtime dependencies, zero CSS.
+Accessible web component library. Vanilla TypeScript, no runtime dependencies, unstyled.
 
-_Pari_, from Latin, meaning "equal."
+## Accessibility first
+
+Every component is built to the [W3C ARIA Authoring Practices Guide](https://www.w3.org/WAI/ARIA/apg/). Keyboard interactions, focus management, and ARIA attributes are handled automatically. You write the markup; Pari handles the behavior.
 
 ## Components
 
-| Component | What it does |
-|-----------|-------------|
-| `pari-disclosure` | Show/hide toggle. FAQ answers, expandable sections, mobile menus. |
-| `pari-accordion` | Grouped disclosure sections with keyboard navigation. |
-| `pari-tabs` | Tabbed interface with roving tabindex and panel management. |
-| `pari-dialog` | Modal dialog wrapping native `<dialog>` with scroll lock. |
-| `pari-popover` | Lightweight popup wrapping the native Popover API. |
-| `pari-nav-disclosure` | Dropdown navigation with hover, keyboard, and focus management. |
+| Component             | What it does                                                                                            |
+| --------------------- | ------------------------------------------------------------------------------------------------------- |
+| `pari-disclosure`     | Toggles visibility of a content region. Click the trigger, the panel shows or hides.                    |
+| `pari-accordion`      | Groups multiple disclosures. Arrow keys move between headers; Home/End jump to first/last.              |
+| `pari-tabs`           | Manages a tablist and its panels. Handles roving tabindex so only the active tab is in the focus order. |
+| `pari-dialog`         | Wraps the native `<dialog>` element. Adds scroll lock on the body and returns focus when closed.        |
+| `pari-popover`        | Thin wrapper around the Popover API. Pairs a trigger button with its popup content.                     |
+| `pari-nav-disclosure` | Dropdown navigation that opens on hover, Enter, Space, or arrow down. Closes when focus leaves.         |
 
-Components follow the [W3C ARIA Authoring Practices Guide](https://www.w3.org/WAI/ARIA/apg/) where applicable. Keyboard interactions, focus management, and ARIA attributes are handled for you.
+## Example
+
+```html
+<pari-disclosure>
+	<button data-trigger aria-expanded="false">What is Pari?</button>
+	<div data-content hidden>
+		<p>An accessible web component library.</p>
+	</div>
+</pari-disclosure>
+```
+
+The component keeps `aria-expanded`, `aria-controls`, and `hidden` in sync with the actual state. Once you import the module, the custom element handles everything else.
+
+## Browser support
+
+These components use modern platform features. Here's when support landed:
+
+| Feature                          | Chrome          | Firefox         | Safari           |
+| -------------------------------- | --------------- | --------------- | ---------------- |
+| Custom elements (all components) | 67+ (May 2018)  | 63+ (Oct 2017)  | 12.1+ (Mar 2019) |
+| `<dialog>` (`pari-dialog`)       | 37+ (Aug 2014)  | 98+ (Feb 2022)  | 15.4+ (Mar 2022) |
+| Popover API (`pari-popover`)     | 114+ (May 2023) | 125+ (Apr 2024) | 17+ (Sep 2023)   |
+
+Polyfills aren't included. Most components work anywhere Custom Elements v1 is supported. `pari-dialog` and `pari-popover` need the native APIs—check your analytics before using them.
 
 ## Install
 
@@ -42,16 +67,16 @@ import 'pari-components/tabs';
 <script src="/path/to/components.iife.js"></script>
 
 <pari-disclosure>
-  <button data-trigger>Show more</button>
-  <div data-content hidden>Your content here.</div>
+	<button data-trigger>Show more</button>
+	<div data-content hidden>Your content here.</div>
 </pari-disclosure>
 ```
 
-The IIFE bundle registers all components automatically. No init script needed.
+The IIFE bundle registers all components on load.
 
 ## Styling
 
-Pari ships no CSS. Bring your own styles, whatever approach works for your project. No specificity fights, no overrides, no "how do I customize the look." You own the styles completely.
+Pari ships no CSS. Style the components however you already style your site—plain CSS, Tailwind, CSS modules, whatever. The components don't inject styles or use shadow DOM, so your selectors work directly on the markup.
 
 ## Development
 
