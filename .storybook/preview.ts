@@ -7,7 +7,6 @@ const preview: Preview = {
 		options: {
 			storySort: {
 				order: [
-					'Introduction',
 					'Disclosure',
 					'Accordion',
 					'Tabs',
