@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>Pari Smoke Test — ESM</title>
+	</head>
+	<body>
+		<h1>ESM Imports</h1>
+		<p>Open the console. Tests run in order.</p>
+
+		<pari-disclosure id="test-disclosure">
+			<button data-trigger>Toggle</button>
+			<div data-content hidden>It works.</div>
+		</pari-disclosure>
+
+		<script type="module">
+			// Test 1: full barrel (side-effect import)
+			await import('./node_modules/pari-components/dist/index.js');
+			console.log('1. Full barrel import: ✓');
+
+			// Test 2: individual component import
+			await import('./node_modules/pari-components/dist/components/disclosure.js');
+			console.log('2. Individual import (disclosure): ✓');
+
+			// Test 3: named class export from per-component path
+			const { PariDisclosure } = await import('./node_modules/pari-components/dist/components/disclosure.js');
+			console.log('3. Named class export:', PariDisclosure ? '✓ ' + PariDisclosure.name : '✗ undefined');
+
+			// Test 4: all six registered after full import
+			const elements = [
+				'pari-disclosure',
+				'pari-accordion',
+				'pari-tabs',
+				'pari-dialog',
+				'pari-popover',
+				'pari-nav-disclosure',
+			];
+			elements.forEach(name => {
+				const defined = !!customElements.get(name);
+				console.log(`4. ${name}: ${defined ? '✓ defined' : '✗ NOT defined'}`);
+			});
+
+			// Test 5: component actually works on real element
+			const el = document.getElementById('test-disclosure');
+			el.show();
+			console.log('5. el.show() open state:', el.open === true ? '✓ open' : '✗ not open');
+			el.hide();
+			console.log('5. el.hide() open state:', el.open === false ? '✓ closed' : '✗ not closed');
+		</script>
+	</body>
+</html>

@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>Pari Smoke Test — IIFE</title>
+		<script src="./node_modules/pari-components/dist/components.iife.js"></script>
+	</head>
+	<body>
+		<h1>IIFE Bundle</h1>
+		<p>Open the console. All six elements should log as "defined".</p>
+
+		<pari-disclosure>
+			<button data-trigger>Toggle</button>
+			<div data-content hidden>It works.</div>
+		</pari-disclosure>
+
+		<script>
+			const elements = [
+				'pari-disclosure',
+				'pari-accordion',
+				'pari-tabs',
+				'pari-dialog',
+				'pari-popover',
+				'pari-nav-disclosure',
+			];
+
+			elements.forEach(name => {
+				const defined = !!customElements.get(name);
+				console.log(`${name}: ${defined ? '✓ defined' : '✗ NOT defined'}`);
+			});
+		</script>
+	</body>
+</html>

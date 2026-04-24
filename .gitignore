@@ -1,5 +1,7 @@
 node_modules
 dist
+smoke-test/node_modules
+*.tgz
 storybook-static
 
 
