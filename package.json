@@ -1,7 +1,8 @@
 {
 	"name": "pari-components",
-	"version": "0.0.1",
+	"version": "0.1.0",
 	"description": "Accessible web component library",
+	"sideEffects": true,
 	"license": "MIT",
 	"author": "Nicholas Hall",
 	"repository": {
