@@ -1,1 +1,1 @@
-{"type":"module"}
+{"type":"module","dependencies":{"pari-components":"file:../pari-components-0.1.0.tgz"}}
