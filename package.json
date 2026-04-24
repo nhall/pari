@@ -59,7 +59,12 @@
 		}
 	},
 	"files": [
-		"dist"
+		"dist/components.iife.js",
+		"dist/components",
+		"dist/index.js",
+		"dist/index.d.ts",
+		"dist/shared",
+		"dist/types.d.ts"
 	],
 	"scripts": {
 		"dev": "vite",
