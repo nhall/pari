@@ -1,6 +1,6 @@
-export { PariDisclosure } from './components/disclosure/disclosure';
-export { PariAccordion } from './components/accordion/accordion';
-export { PariTabs } from './components/tabs/tabs';
-export { PariDialog } from './components/dialog/dialog';
-export { PariPopover } from './components/popover/popover';
-export { PariNavDisclosure } from './components/nav-disclosure/nav-disclosure';
+import './components/disclosure/disclosure';
+import './components/accordion/accordion';
+import './components/tabs/tabs';
+import './components/dialog/dialog';
+import './components/popover/popover';
+import './components/nav-disclosure/nav-disclosure';
