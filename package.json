@@ -23,14 +23,15 @@
     "popover"
   ],
   "type": "module",
-  "main": "./dist/components.iife.js",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "engines": {
+    "node": ">=18"
+  },
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/index.js",
-      "default": "./dist/components.iife.js"
+      "import": "./dist/index.js"
     },
     "./disclosure": {
       "types": "./dist/components/disclosure/disclosure.d.ts",
