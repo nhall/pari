@@ -20,7 +20,8 @@
 		"accordion",
 		"tabs",
 		"dialog",
-		"popover"
+		"popover",
+		"notification"
 	],
 	"type": "module",
 	"module": "./dist/index.js",
@@ -56,6 +57,10 @@
 		"./nav-disclosure": {
 			"types": "./dist/components/nav-disclosure/nav-disclosure.d.ts",
 			"import": "./dist/components/nav-disclosure.js"
+		},
+		"./notification": {
+			"types": "./dist/components/notification/notification.d.ts",
+			"import": "./dist/components/notification.js"
 		}
 	},
 	"files": [

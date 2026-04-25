@@ -1,0 +1,77 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import * as NotificationStories from './notification.stories';
+
+<Meta of={NotificationStories} />
+
+# Notification
+
+A non-blocking notification component built on the [native Popover API](https://developer.mozilla.org/en-US/docs/Web/API/Popover_API). Use it for status messages, confirmations, and error alerts that appear without interrupting the user's current task.
+
+Follows the [APG Alert Pattern](https://www.w3.org/WAI/ARIA/apg/patterns/alert/). Screen readers are notified via a shared live region when the notification is shown, ensuring the message reaches users who may not see the visual display.
+
+## Markup
+
+```html
+<pari-notification>
+  <div data-content popover="manual">
+    <p>Your changes have been saved.</p>
+    <button data-close>Dismiss</button>
+  </div>
+</pari-notification>
+```
+
+The `role` attribute on the host controls urgency. Pari sets `role`, `aria-live`, and `aria-atomic` on `[data-content]` automatically. The close button is optional: without it, the notification stays visible until `hide()` is called.
+
+Per WCAG 2.2.1, notifications do not auto-dismiss. If your use case requires timed dismissal, call `hide()` from your own code and ensure users can pause or extend the timeout.
+
+## Attributes
+
+| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `role` | `'status'` or `'alert'` | `'status'` | Sets the ARIA role and live region politeness. Use `'alert'` for errors and critical messages that need immediate attention. Use `'status'` for confirmations and progress updates. |
+
+## Data attributes
+
+| Attribute | Element | Purpose |
+|-----------|---------|---------|
+| `data-content` | any | The popover element. Receives `role`, `aria-live`, and `aria-atomic` automatically. |
+| `data-close` | button | Optional. Dismisses the notification when clicked. |
+
+## Events
+
+| Event | Detail | When it fires |
+|-------|--------|---------------|
+| `notification:open` | `{ instance }` | Right after the notification opens. |
+| `notification:close` | `{ instance }` | Right after the notification closes. |
+
+## API
+
+| Member | Type | Description |
+|--------|------|-------------|
+| `show()` | method | Shows the notification and announces its content to screen readers. |
+| `hide()` | method | Hides the notification. |
+| `open` | getter | `true` when the notification is visible. |
+
+## Keyboard
+
+No keyboard interaction is required by the [APG Alert Pattern](https://www.w3.org/WAI/ARIA/apg/patterns/alert/). Notifications do not trap focus. The `[data-close]` button is reachable in the natural tab order when the notification is visible.
+
+## Examples
+
+### Default
+
+A polite status notification. The screen reader finishes what it is currently announcing before reading the notification message.
+
+<Canvas of={NotificationStories.Default} />
+
+### Alert
+
+An assertive notification for errors and critical messages. The screen reader interrupts its current announcement to read this immediately. Use sparingly.
+
+<Canvas of={NotificationStories.Alert} />
+
+### No close button
+
+A notification without a dismiss control. It stays visible until `hide()` is called programmatically.
+
+<Canvas of={NotificationStories.NoCloseButton} />

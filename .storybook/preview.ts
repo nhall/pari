@@ -13,6 +13,7 @@ const preview: Preview = {
 					'Dialog',
 					'Popover',
 					'Nav Disclosure',
+					'Notification',
 				],
 			},
 		},
