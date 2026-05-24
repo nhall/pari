@@ -9,6 +9,7 @@ const components = [
 	'dialog',
 	'popover',
 	'nav-disclosure',
+	'notification',
 ];
 
 const componentEntries = Object.fromEntries(
