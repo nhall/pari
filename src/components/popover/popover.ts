@@ -30,6 +30,12 @@ export class PariPopover extends HTMLElement {
 	private _handleMouseLeave = this._onMouseLeave.bind(this);
 
 	connectedCallback() {
+		if (!this.firstElementChild) {
+			// Children not yet parsed — script ran before DOM (e.g. IIFE in <head>).
+			setTimeout(() => { if (this.isConnected) this.connectedCallback(); }, 0);
+			return;
+		}
+
 		this._trigger = this.querySelector<HTMLElement>('[data-trigger]');
 		this._content = this.querySelector<HTMLElement>('[data-content]');
 

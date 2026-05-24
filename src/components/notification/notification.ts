@@ -29,6 +29,12 @@ export class PariNotification extends HTMLElement {
 	private _handleClose = this._onClose.bind(this);
 
 	connectedCallback() {
+		if (!this.firstElementChild) {
+			// Children not yet parsed — script ran before DOM (e.g. IIFE in <head>).
+			setTimeout(() => { if (this.isConnected) this.connectedCallback(); }, 0);
+			return;
+		}
+
 		this._content = this.querySelector<HTMLElement>('[data-content]');
 
 		if (!this._content) return;

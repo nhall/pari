@@ -26,6 +26,12 @@ export class PariNavDisclosure extends HTMLElement {
 	private _hoverListeners: Array<{ el: HTMLElement; enter: () => void; leave: () => void }> = [];
 
 	connectedCallback() {
+		if (!this.firstElementChild) {
+			// Children not yet parsed — script ran before DOM (e.g. IIFE in <head>).
+			setTimeout(() => { if (this.isConnected) this.connectedCallback(); }, 0);
+			return;
+		}
+
 		for (const d of this._disclosures) {
 			const trigger = d.querySelector<HTMLElement>('[data-trigger]');
 			if (trigger) {

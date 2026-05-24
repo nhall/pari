@@ -44,6 +44,12 @@ export class PariDisclosure extends HTMLElement {
 	private _deeplinkHandler: (() => void) | null = null;
 
 	connectedCallback() {
+		if (!this.firstElementChild) {
+			// Children not yet parsed — script ran before DOM (e.g. IIFE in <head>).
+			setTimeout(() => { if (this.isConnected) this.connectedCallback(); }, 0);
+			return;
+		}
+
 		this._trigger = this._ownChild('[data-trigger]');
 		this._content = this._ownChild('[data-content]');
 

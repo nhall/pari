@@ -28,6 +28,12 @@ export class PariDialog extends HTMLElement {
 	private _deeplinkHandler: (() => void) | null = null;
 
 	connectedCallback() {
+		if (!this.firstElementChild) {
+			// Children not yet parsed — script ran before DOM (e.g. IIFE in <head>).
+			setTimeout(() => { if (this.isConnected) this.connectedCallback(); }, 0);
+			return;
+		}
+
 		this._dialog = this.querySelector<HTMLDialogElement>('dialog');
 		if (!this._dialog) return;
 

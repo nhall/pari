@@ -32,6 +32,12 @@ export class PariTabs extends HTMLElement {
 	private _cachedTablist: HTMLElement | null = null;
 
 	connectedCallback() {
+		if (!this.firstElementChild) {
+			// Children not yet parsed — script ran before DOM (e.g. IIFE in <head>).
+			setTimeout(() => { if (this.isConnected) this.connectedCallback(); }, 0);
+			return;
+		}
+
 		this._cachedTablist = this.querySelector<HTMLElement>('[data-tablist]');
 		const tablist = this._cachedTablist;
 		if (!tablist) return;
