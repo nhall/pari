@@ -16,6 +16,7 @@ Every component is built to the [W3C ARIA Authoring Practices Guide](https://www
 | `pari-dialog`         | Wraps the native `<dialog>` element. Adds scroll lock on the body and returns focus when closed.        |
 | `pari-popover`        | Thin wrapper around the Popover API. Pairs a trigger button with its popup content.                     |
 | `pari-nav-disclosure` | Dropdown navigation that opens on hover, Enter, Space, or arrow down. Closes when focus leaves.         |
+| `pari-notification`   | Displays a message via the Popover API and announces it to screen readers without moving focus.          |
 
 ## Example
 
@@ -38,7 +39,7 @@ These components use modern platform features. Here's when support landed:
 | -------------------------------- | --------------- | --------------- | ---------------- |
 | Custom elements (all components) | 67+ (May 2018)  | 63+ (Oct 2017)  | 12.1+ (Mar 2019) |
 | `<dialog>` (`pari-dialog`)       | 37+ (Aug 2014)  | 98+ (Feb 2022)  | 15.4+ (Mar 2022) |
-| Popover API (`pari-popover`)     | 114+ (May 2023) | 125+ (Apr 2024) | 17+ (Sep 2023)   |
+| Popover API (`pari-popover`, `pari-notification`) | 114+ (May 2023) | 125+ (Apr 2024) | 17+ (Sep 2023)   |
 
 Polyfills aren't included. Most components work anywhere Custom Elements v1 is supported. `pari-dialog` and `pari-popover` need the native APIs—check your analytics before using them.
 
@@ -59,6 +60,7 @@ import 'pari-components';
 // Or just what you need
 import 'pari-components/disclosure';
 import 'pari-components/tabs';
+import 'pari-components/notification';
 ```
 
 ### Script tag
