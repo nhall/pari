@@ -14,14 +14,20 @@ type Story = StoryObj;
 
 const tick = () => new Promise((r) => setTimeout(r, 50));
 
+const getNotification = (e: Event) =>
+	(e.target as HTMLElement).closest('div')!.querySelector('pari-notification') as any;
+
 export const Default: Story = {
 	render: () => html`
-		<pari-notification>
-			<div data-content popover="manual">
-				<p>Your changes have been saved.</p>
-				<button data-close>Dismiss</button>
-			</div>
-		</pari-notification>
+		<div>
+			<button @click=${(e: Event) => getNotification(e).show()}>Show notification</button>
+			<pari-notification>
+				<div data-content popover="manual">
+					<p>Your changes have been saved.</p>
+					<button data-close>Dismiss</button>
+				</div>
+			</pari-notification>
+		</div>
 	`,
 	play: async ({ canvasElement }) => {
 		const pariNotification = canvasElement.querySelector('pari-notification') as any;
@@ -70,12 +76,15 @@ export const Default: Story = {
 
 export const Alert: Story = {
 	render: () => html`
-		<pari-notification role="alert">
-			<div data-content popover="manual">
-				<p>Error: unable to save your changes. Please try again.</p>
-				<button data-close>Dismiss</button>
-			</div>
-		</pari-notification>
+		<div>
+			<button @click=${(e: Event) => getNotification(e).show()}>Show notification</button>
+			<pari-notification role="alert">
+				<div data-content popover="manual">
+					<p>Error: unable to save your changes. Please try again.</p>
+					<button data-close>Dismiss</button>
+				</div>
+			</pari-notification>
+		</div>
 	`,
 	play: async ({ canvasElement }) => {
 		const pariNotification = canvasElement.querySelector('pari-notification') as any;
@@ -98,11 +107,15 @@ export const Alert: Story = {
 
 export const NoCloseButton: Story = {
 	render: () => html`
-		<pari-notification>
-			<div data-content popover="manual">
-				<p>Draft saved automatically.</p>
-			</div>
-		</pari-notification>
+		<div>
+			<button @click=${(e: Event) => getNotification(e).show()}>Show notification</button>
+			<button @click=${(e: Event) => getNotification(e).hide()}>Hide notification</button>
+			<pari-notification>
+				<div data-content popover="manual">
+					<p>Draft saved automatically.</p>
+				</div>
+			</pari-notification>
+		</div>
 	`,
 	play: async ({ canvasElement }) => {
 		const pariNotification = canvasElement.querySelector('pari-notification') as any;
