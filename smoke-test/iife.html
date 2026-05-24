@@ -7,27 +7,51 @@
 	</head>
 	<body>
 		<h1>IIFE Bundle</h1>
-		<p>Open the console. All six elements should log as "defined".</p>
+		<p>Open the console. Tests run after a brief delay (IIFE registers elements before DOM parses).</p>
 
-		<pari-disclosure>
+		<pari-disclosure id="test-disclosure">
 			<button data-trigger>Toggle</button>
 			<div data-content hidden>It works.</div>
 		</pari-disclosure>
 
-		<script>
-			const elements = [
-				'pari-disclosure',
-				'pari-accordion',
-				'pari-tabs',
-				'pari-dialog',
-				'pari-popover',
-				'pari-nav-disclosure',
-			];
+		<pari-notification id="test-notification">
+			<div data-content popover="manual">
+				<p>Smoke test notification.</p>
+			</div>
+		</pari-notification>
 
-			elements.forEach(name => {
-				const defined = !!customElements.get(name);
-				console.log(`${name}: ${defined ? '✓ defined' : '✗ NOT defined'}`);
-			});
+		<script>
+			// Defer so the setTimeout-based connectedCallback retry has fired.
+			setTimeout(() => {
+				// Test 1: all seven registered
+				const elements = [
+					'pari-disclosure',
+					'pari-accordion',
+					'pari-tabs',
+					'pari-dialog',
+					'pari-popover',
+					'pari-nav-disclosure',
+					'pari-notification',
+				];
+				elements.forEach(name => {
+					const defined = !!customElements.get(name);
+					console.log(`1. ${name}: ${defined ? '✓ defined' : '✗ NOT defined'}`);
+				});
+
+				// Test 2: disclosure show/hide works
+				const el = document.getElementById('test-disclosure');
+				el.show();
+				console.log('2. el.show() open state:', el.open === true ? '✓ open' : '✗ not open');
+				el.hide();
+				console.log('2. el.hide() open state:', el.open === false ? '✓ closed' : '✗ not closed');
+
+				// Test 3: notification show/hide works
+				const notif = document.getElementById('test-notification');
+				notif.show();
+				console.log('3. notif.show() open state:', notif.open === true ? '✓ open' : '✗ not open');
+				notif.hide();
+				console.log('3. notif.hide() open state:', notif.open === false ? '✓ closed' : '✗ not closed');
+			}, 50);
 		</script>
 	</body>
 </html>

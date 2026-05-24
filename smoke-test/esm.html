@@ -13,6 +13,12 @@
 			<div data-content hidden>It works.</div>
 		</pari-disclosure>
 
+		<pari-notification id="test-notification">
+			<div data-content popover="manual">
+				<p>Smoke test notification.</p>
+			</div>
+		</pari-notification>
+
 		<script type="module">
 			// Test 1: full barrel (side-effect import)
 			await import('./node_modules/pari-components/dist/index.js');
@@ -26,7 +32,7 @@
 			const { PariDisclosure } = await import('./node_modules/pari-components/dist/components/disclosure.js');
 			console.log('3. Named class export:', PariDisclosure ? '✓ ' + PariDisclosure.name : '✗ undefined');
 
-			// Test 4: all six registered after full import
+			// Test 4: all seven registered after full import
 			const elements = [
 				'pari-disclosure',
 				'pari-accordion',
@@ -34,6 +40,7 @@
 				'pari-dialog',
 				'pari-popover',
 				'pari-nav-disclosure',
+				'pari-notification',
 			];
 			elements.forEach(name => {
 				const defined = !!customElements.get(name);
@@ -46,6 +53,15 @@
 			console.log('5. el.show() open state:', el.open === true ? '✓ open' : '✗ not open');
 			el.hide();
 			console.log('5. el.hide() open state:', el.open === false ? '✓ closed' : '✗ not closed');
+
+			// Test 6: notification individual import and show/hide
+			const { PariNotification } = await import('./node_modules/pari-components/dist/components/notification.js');
+			console.log('6. Named class export:', PariNotification ? '✓ ' + PariNotification.name : '✗ undefined');
+			const notif = document.getElementById('test-notification');
+			notif.show();
+			console.log('6. notif.show() open state:', notif.open === true ? '✓ open' : '✗ not open');
+			notif.hide();
+			console.log('6. notif.hide() open state:', notif.open === false ? '✓ closed' : '✗ not closed');
 		</script>
 	</body>
 </html>
