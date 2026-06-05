@@ -87,14 +87,15 @@
 		"@storybook/addon-docs": "^10.3.3",
 		"@storybook/addon-vitest": "^10.3.3",
 		"@storybook/web-components-vite": "^10.3.3",
-		"@vitest/browser-playwright": "^4.1.1",
-		"@vitest/coverage-v8": "^4.1.1",
+		"@vitest/browser": "^4.1.8",
+		"@vitest/browser-playwright": "^4.1.8",
+		"@vitest/coverage-v8": "^4.1.8",
 		"lit": "^3.3.2",
 		"remark-gfm": "^4.0.1",
 		"storybook": "^10.3.3",
 		"typescript": "^6.0.2",
 		"vite": "^8.0.2",
 		"vite-plugin-dts": "^4.5.4",
-		"vitest": "^4.1.1"
+		"vitest": "^4.1.8"
 	}
 }
