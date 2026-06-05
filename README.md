@@ -1,5 +1,7 @@
 # Pari
 
+[![Storybook](https://img.shields.io/badge/storybook-live-FF4785?logo=storybook&logoColor=white)](https://pari-storybook.vercel.app)
+
 Accessible web component library. Vanilla TypeScript, no runtime dependencies, unstyled.
 
 ## Accessibility first
