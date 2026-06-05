@@ -5,3 +5,4 @@ export { PariDialog } from './components/dialog/dialog.js';
 export { PariPopover } from './components/popover/popover.js';
 export { PariNavDisclosure } from './components/nav-disclosure/nav-disclosure.js';
 export { PariNotification } from './components/notification/notification.js';
+export { PariTooltip } from './components/tooltip/tooltip.js';

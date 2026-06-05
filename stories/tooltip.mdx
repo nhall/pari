@@ -1,0 +1,69 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import * as TooltipStories from './tooltip.stories';
+
+<Meta of={TooltipStories} />
+
+# Tooltip
+
+A non-interactive floating label that describes a UI element, following the [APG Tooltip Pattern](https://www.w3.org/WAI/ARIA/apg/patterns/tooltip/). Use it to label icon-only buttons or to give extra context for controls whose visible label is too brief.
+
+The tooltip never receives focus. It appears when the trigger is hovered or focused, and disappears on mouseleave, blur, or Escape. Pari uses the Popover API for top-layer rendering and CSS anchor positioning to keep the tooltip near its trigger.
+
+## Markup
+
+```html
+<pari-tooltip>
+  <button data-trigger>Save changes</button>
+  <div data-content>Saves your work to the server</div>
+</pari-tooltip>
+```
+
+Pari automatically sets `role="tooltip"` on the content element, `aria-describedby` on the trigger, and `popover="manual"` for top-layer rendering.
+
+## Attributes
+
+| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `delay` | number | `100` | Hover show delay in milliseconds. Focus always shows the tooltip immediately. Hide on mouseleave always uses a fixed 150ms debounce. |
+
+## Data attributes
+
+| Attribute | Element | Purpose |
+|-----------|---------|---------|
+| `data-trigger` | button or interactive element | The element the tooltip describes. Receives `aria-describedby` automatically. |
+| `data-content` | any | The tooltip text. Receives `role="tooltip"` and `popover="manual"` automatically. |
+
+## Events
+
+| Event | Detail | When it fires |
+|-------|--------|---------------|
+| `tooltip:show` | `{ instance }` | Right after the tooltip becomes visible. |
+| `tooltip:hide` | `{ instance }` | Right after the tooltip is hidden. |
+
+## Keyboard
+
+| Key / Action | What happens |
+|--------------|--------------|
+| Focus on trigger | Tooltip shows immediately, no delay. |
+| Escape | Tooltip hides regardless of whether it opened via hover or focus. Focus does not move. |
+| Blur (trigger loses focus) | Tooltip hides. |
+
+## Examples
+
+### Default
+
+Hover over or focus the button to see the tooltip above it.
+
+<Canvas of={TooltipStories.Default} />
+
+### Custom delay
+
+The `delay` attribute controls how long the pointer must rest on the trigger before the tooltip appears. Focus still shows it instantly.
+
+<Canvas of={TooltipStories.CustomDelay} />
+
+### On an icon button
+
+The primary use case for tooltips: an icon-only button where `aria-label` names the action and the tooltip reinforces it visually for sighted users.
+
+<Canvas of={TooltipStories.OnIcon} />

@@ -10,6 +10,7 @@ const components = [
 	'popover',
 	'nav-disclosure',
 	'notification',
+	'tooltip',
 ];
 
 const componentEntries = Object.fromEntries(
