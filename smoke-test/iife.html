@@ -20,10 +20,15 @@
 			</div>
 		</pari-notification>
 
+		<pari-tooltip id="test-tooltip">
+			<button data-trigger>Trigger</button>
+			<div data-content>Smoke test tooltip.</div>
+		</pari-tooltip>
+
 		<script>
 			// Defer so the setTimeout-based connectedCallback retry has fired.
 			setTimeout(() => {
-				// Test 1: all seven registered
+				// Test 1: all components registered
 				const elements = [
 					'pari-disclosure',
 					'pari-accordion',
@@ -32,6 +37,7 @@
 					'pari-popover',
 					'pari-nav-disclosure',
 					'pari-notification',
+					'pari-tooltip',
 				];
 				elements.forEach(name => {
 					const defined = !!customElements.get(name);
@@ -51,6 +57,17 @@
 				console.log('3. notif.show() open state:', notif.open === true ? '✓ open' : '✗ not open');
 				notif.hide();
 				console.log('3. notif.hide() open state:', notif.open === false ? '✓ closed' : '✗ not closed');
+
+				// Test 4: tooltip ARIA wiring and show/hide
+				const tooltip = document.getElementById('test-tooltip');
+				const tooltipTrigger = tooltip.querySelector('[data-trigger]');
+				const tooltipContent = tooltip.querySelector('[data-content]');
+				console.log('4. role="tooltip":', tooltipContent.getAttribute('role') === 'tooltip' ? '✓' : '✗');
+				console.log('4. aria-describedby wired:', tooltipTrigger.getAttribute('aria-describedby') === tooltipContent.id ? '✓' : '✗');
+				tooltip.show();
+				console.log('4. tooltip.show() open state:', tooltip.open === true ? '✓ open' : '✗ not open');
+				tooltip.hide();
+				console.log('4. tooltip.hide() open state:', tooltip.open === false ? '✓ closed' : '✗ not closed');
 			}, 50);
 		</script>
 	</body>

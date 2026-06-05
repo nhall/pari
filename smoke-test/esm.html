@@ -19,6 +19,11 @@
 			</div>
 		</pari-notification>
 
+		<pari-tooltip id="test-tooltip">
+			<button data-trigger>Trigger</button>
+			<div data-content>Smoke test tooltip.</div>
+		</pari-tooltip>
+
 		<script type="module">
 			// Test 1: full barrel (side-effect import)
 			await import('./node_modules/pari-components/dist/index.js');
@@ -32,7 +37,7 @@
 			const { PariDisclosure } = await import('./node_modules/pari-components/dist/components/disclosure.js');
 			console.log('3. Named class export:', PariDisclosure ? '✓ ' + PariDisclosure.name : '✗ undefined');
 
-			// Test 4: all seven registered after full import
+			// Test 4: all components registered after full import
 			const elements = [
 				'pari-disclosure',
 				'pari-accordion',
@@ -41,6 +46,7 @@
 				'pari-popover',
 				'pari-nav-disclosure',
 				'pari-notification',
+				'pari-tooltip',
 			];
 			elements.forEach(name => {
 				const defined = !!customElements.get(name);
@@ -62,6 +68,19 @@
 			console.log('6. notif.show() open state:', notif.open === true ? '✓ open' : '✗ not open');
 			notif.hide();
 			console.log('6. notif.hide() open state:', notif.open === false ? '✓ closed' : '✗ not closed');
+
+			// Test 7: tooltip individual import, ARIA wiring, and show/hide
+			const { PariTooltip } = await import('./node_modules/pari-components/dist/components/tooltip.js');
+			console.log('7. Named class export:', PariTooltip ? '✓ ' + PariTooltip.name : '✗ undefined');
+			const tooltip = document.getElementById('test-tooltip');
+			const tooltipTrigger = tooltip.querySelector('[data-trigger]');
+			const tooltipContent = tooltip.querySelector('[data-content]');
+			console.log('7. role="tooltip":', tooltipContent.getAttribute('role') === 'tooltip' ? '✓' : '✗');
+			console.log('7. aria-describedby wired:', tooltipTrigger.getAttribute('aria-describedby') === tooltipContent.id ? '✓' : '✗');
+			tooltip.show();
+			console.log('7. tooltip.show() open state:', tooltip.open === true ? '✓ open' : '✗ not open');
+			tooltip.hide();
+			console.log('7. tooltip.hide() open state:', tooltip.open === false ? '✓ closed' : '✗ not closed');
 		</script>
 	</body>
 </html>
