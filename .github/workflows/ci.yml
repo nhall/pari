@@ -11,6 +11,8 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     container:
+      # Keep this tag in sync with the `playwright` version in package-lock.json.
+      # Browsers in the image must match the Playwright client, or tests get flaky.
       image: mcr.microsoft.com/playwright:v1.59.1-noble
     permissions:
       contents: read
