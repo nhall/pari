@@ -1,5 +1,6 @@
 # Pari
 
+[![Storybook](https://img.shields.io/badge/storybook-live-FF4785?logo=storybook&logoColor=white)](https://pari-storybook.vercel.app)
 [![npm version](https://img.shields.io/npm/v/pari-components.svg)](https://www.npmjs.com/package/pari-components)
 [![install size](https://packagephobia.com/badge?p=pari-components)](https://packagephobia.com/result?p=pari-components)
 [![zero dependencies](https://img.shields.io/badge/dependencies-0-brightgreen)](https://www.npmjs.com/package/pari-components?activeTab=dependencies)
