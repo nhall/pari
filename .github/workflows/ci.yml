@@ -10,6 +10,8 @@ jobs:
   test:
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    container:
+      image: mcr.microsoft.com/playwright:v1.59.1-noble
     permissions:
       contents: read
     steps:
@@ -21,8 +23,6 @@ jobs:
           cache: npm
 
       - run: npm ci
-
-      - run: npx playwright install chromium
 
       - run: npm test
 
