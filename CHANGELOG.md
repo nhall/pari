@@ -2,6 +2,20 @@
 
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- New component: `pari-tooltip`. APG Tooltip Pattern. Shows on hover (configurable delay) or focus (immediate). Dismisses on Escape, blur, or mouseleave. Tooltip never receives focus. Wires `role="tooltip"` and `aria-describedby` automatically.
+
+### Changed
+
+- CI moved to Microsoft's official Playwright Docker container (`mcr.microsoft.com/playwright:v1.59.1-noble`). Browsers and system libraries are pre-installed in the image, eliminating the per-run `playwright install` step that had become unreliable on the ubuntu-latest runner.
+
+### Security
+
+- Bumped the vitest family (`vitest`, `@vitest/browser`, `@vitest/browser-playwright`, `@vitest/coverage-v8`) to 4.1.8 to patch [GHSA-2h32-95rg-cppp](https://github.com/advisories/GHSA-2h32-95rg-cppp) (CVE-2026-47428). Dev-only impact: the vulnerable code path is in Vitest's browser-mode server, not in the published package.
+
 ## [0.2.1] - 2026-05-24
 
 ### Changed
