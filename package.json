@@ -1,8 +1,11 @@
 {
 	"name": "pari-components",
-	"version": "0.3.0",
+	"version": "0.3.1",
 	"description": "Accessible web component library",
-	"sideEffects": true,
+	"sideEffects": [
+		"./dist/components/*.js",
+		"./dist/components.iife.js"
+	],
 	"license": "MIT",
 	"author": "Nicholas Hall",
 	"repository": {

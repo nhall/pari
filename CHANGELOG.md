@@ -4,6 +4,12 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: [S
 
 ## [Unreleased]
 
+## [0.3.1] - 2026-06-06
+
+### Fixed
+
+- Refined `sideEffects` from `true` to a list naming only the component-registration files (`./dist/components/*.js` and `./dist/components.iife.js`). Restores tree-shakeable status (visible on bundlephobia and per consumer bundlers) while preserving `customElements.define()` registration on import. Shared utilities under `dist/shared/` are now correctly marked side-effect-free.
+
 ## [0.3.0] - 2026-06-06
 
 ### Added
