@@ -1,6 +1,6 @@
 {
 	"name": "pari-components",
-	"version": "0.3.1",
+	"version": "0.3.2",
 	"description": "Accessible web component library",
 	"sideEffects": [
 		"./dist/components/*.js",
@@ -11,6 +11,10 @@
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/nhall/pari.git"
+	},
+	"homepage": "https://pari-storybook.vercel.app",
+	"bugs": {
+		"url": "https://github.com/nhall/pari/issues"
 	},
 	"keywords": [
 		"web-components",
@@ -24,7 +28,8 @@
 		"tabs",
 		"dialog",
 		"popover",
-		"notification"
+		"notification",
+		"tooltip"
 	],
 	"type": "module",
 	"module": "./dist/index.js",

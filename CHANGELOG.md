@@ -4,11 +4,23 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: [S
 
 ## [Unreleased]
 
+## [0.3.2] - 2026-06-06
+
+### Added
+
+- `homepage` field in `package.json` pointing to the live Storybook ([pari-storybook.vercel.app](https://pari-storybook.vercel.app)).
+- `bugs` field in `package.json` pointing to GitHub Issues.
+- `tooltip` added to the `keywords` list (missed when 0.3.0 shipped).
+
+### Changed
+
+- Corrected the 0.3.1 changelog entry below to remove an inaccurate "restores tree-shakeable status" framing. The package was tree-shakeable in ESM form across all 0.x releases; the 0.3.1 change tightened the `sideEffects` declaration so consumer bundlers can eliminate unused shared utilities, but it did not change tree-shakeable status itself.
+
 ## [0.3.1] - 2026-06-06
 
-### Fixed
+### Changed
 
-- Refined `sideEffects` from `true` to a list naming only the component-registration files (`./dist/components/*.js` and `./dist/components.iife.js`). Restores tree-shakeable status (visible on bundlephobia and per consumer bundlers) while preserving `customElements.define()` registration on import. Shared utilities under `dist/shared/` are now correctly marked side-effect-free.
+- Tightened `sideEffects` declaration from blanket `true` to a list of side-effectful files (`./dist/components/*.js` and `./dist/components.iife.js`). Consumer bundlers can now eliminate unused shared utilities from `dist/shared/` while `customElements.define()` registration on imported components is preserved.
 
 ## [0.3.0] - 2026-06-06
 
