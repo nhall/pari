@@ -11,6 +11,10 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: [S
 ### Changed
 
 - CI moved to Microsoft's official Playwright Docker container (`mcr.microsoft.com/playwright:v1.59.1-noble`). Browsers and system libraries are pre-installed in the image, eliminating the per-run `playwright install` step that had become unreliable on the ubuntu-latest runner.
+- Added `SECURITY.md` describing the vulnerability reporting process and supported-versions policy.
+- Configured Dependabot to open weekly PRs grouping minor/patch updates for npm and GitHub Actions.
+- Tightened workflow token permissions: CI now declares `contents: read` at the workflow level so the default `GITHUB_TOKEN` starts read-only.
+- Added the OpenSSF Scorecard action and badge. Weekly scan publishes results to scorecard.dev and uploads SARIF to GitHub code scanning.
 
 ### Security
 
