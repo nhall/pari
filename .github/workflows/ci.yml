@@ -6,6 +6,10 @@ on:
   pull_request:
     branches: [main]
 
+# Workflow-level default: read-only. Jobs opt up to what they actually need.
+permissions:
+  contents: read
+
 jobs:
   test:
     runs-on: ubuntu-latest
