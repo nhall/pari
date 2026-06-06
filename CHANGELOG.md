@@ -15,6 +15,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: [S
 - Configured Dependabot to open weekly PRs grouping minor/patch updates for npm and GitHub Actions.
 - Tightened workflow token permissions: CI now declares `contents: read` at the workflow level so the default `GITHUB_TOKEN` starts read-only.
 - Added the OpenSSF Scorecard action and badge. Weekly scan publishes results to scorecard.dev and uploads SARIF to GitHub code scanning.
+- Pinned all GitHub Actions to commit SHAs and bumped to current majors (`checkout@v6`, `setup-node@v6`, `upload-artifact@v7`, `codeql-action@v4`, `scorecard-action@v2.4.3`). Dependabot maintains the SHAs automatically.
 
 ### Security
 
