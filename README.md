@@ -1,6 +1,7 @@
 # Pari
 
 [![Storybook](https://img.shields.io/badge/storybook-live-FF4785?logo=storybook&logoColor=white)](https://pari-storybook.vercel.app)
+[![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/nhall/pari/badge)](https://scorecard.dev/viewer/?uri=github.com/nhall/pari)
 
 Accessible web component library. Vanilla TypeScript, no runtime dependencies, unstyled.
 
