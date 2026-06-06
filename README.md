@@ -1,7 +1,12 @@
 # Pari
 
 [![Storybook](https://img.shields.io/badge/storybook-live-FF4785?logo=storybook&logoColor=white)](https://pari-storybook.vercel.app)
+[![npm version](https://img.shields.io/npm/v/pari-components.svg)](https://www.npmjs.com/package/pari-components)
+[![install size](https://packagephobia.com/badge?p=pari-components)](https://packagephobia.com/result?p=pari-components)
+[![zero dependencies](https://img.shields.io/badge/dependencies-0-brightgreen)](https://www.npmjs.com/package/pari-components?activeTab=dependencies)
 [![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/nhall/pari/badge)](https://scorecard.dev/viewer/?uri=github.com/nhall/pari)
+[![CI](https://github.com/nhall/pari/actions/workflows/ci.yml/badge.svg)](https://github.com/nhall/pari/actions/workflows/ci.yml)
+[![license](https://img.shields.io/npm/l/pari-components.svg)](https://github.com/nhall/pari/blob/main/LICENSE)
 
 Accessible web component library. Vanilla TypeScript, no runtime dependencies, unstyled.
 
@@ -20,6 +25,7 @@ Every component is built to the [W3C ARIA Authoring Practices Guide](https://www
 | `pari-popover`        | Thin wrapper around the Popover API. Pairs a trigger button with its popup content.                     |
 | `pari-nav-disclosure` | Dropdown navigation that opens on hover, Enter, Space, or arrow down. Closes when focus leaves.         |
 | `pari-notification`   | Displays a message via the Popover API and announces it to screen readers without moving focus.          |
+| `pari-tooltip`        | Floating label that appears on hover or focus. Never receives focus. Dismisses on Escape or blur.        |
 
 ## Example
 
@@ -42,7 +48,7 @@ These components use modern platform features. Here's when support landed:
 | -------------------------------- | --------------- | --------------- | ---------------- |
 | Custom elements (all components) | 67+ (May 2018)  | 63+ (Oct 2017)  | 12.1+ (Mar 2019) |
 | `<dialog>` (`pari-dialog`)       | 37+ (Aug 2014)  | 98+ (Feb 2022)  | 15.4+ (Mar 2022) |
-| Popover API (`pari-popover`, `pari-notification`) | 114+ (May 2023) | 125+ (Apr 2024) | 17+ (Sep 2023)   |
+| Popover API (`pari-popover`, `pari-notification`, `pari-tooltip`) | 114+ (May 2023) | 125+ (Apr 2024) | 17+ (Sep 2023)   |
 
 Polyfills aren't included. Most components work anywhere Custom Elements v1 is supported. `pari-dialog` and `pari-popover` need the native APIs—check your analytics before using them.
 
