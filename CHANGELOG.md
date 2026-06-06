@@ -4,6 +4,8 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: [S
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-06-06
+
 ### Added
 
 - New component: `pari-tooltip`. APG Tooltip Pattern. Shows on hover (configurable delay) or focus (immediate). Dismisses on Escape, blur, or mouseleave. Tooltip never receives focus. Wires `role="tooltip"` and `aria-describedby` automatically.
