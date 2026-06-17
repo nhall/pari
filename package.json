@@ -91,20 +91,20 @@
 		"test:smoke": "npm run build && npm pack && npm install --prefix smoke-test ./pari-components-*.tgz && python3 -m http.server 7777 --directory smoke-test"
 	},
 	"devDependencies": {
-		"@storybook/addon-a11y": "^10.3.3",
-		"@storybook/addon-docs": "^10.3.3",
-		"@storybook/addon-vitest": "^10.3.3",
-		"@storybook/web-components-vite": "^10.3.3",
-		"@types/node": "^25.9.1",
-		"@vitest/browser": "^4.1.8",
-		"@vitest/browser-playwright": "^4.1.8",
-		"@vitest/coverage-v8": "^4.1.8",
+		"@storybook/addon-a11y": "^10.4.5",
+		"@storybook/addon-docs": "^10.4.5",
+		"@storybook/addon-vitest": "^10.4.5",
+		"@storybook/web-components-vite": "^10.4.5",
+		"@types/node": "^25.9.3",
+		"@vitest/browser": "^4.1.9",
+		"@vitest/browser-playwright": "^4.1.9",
+		"@vitest/coverage-v8": "^4.1.9",
 		"lit": "^3.3.2",
 		"remark-gfm": "^4.0.1",
-		"storybook": "^10.3.3",
+		"storybook": "^10.4.5",
 		"typescript": "^6.0.2",
 		"vite": "^8.0.2",
 		"vite-plugin-dts": "^5.0.2",
-		"vitest": "^4.1.8"
+		"vitest": "^4.1.9"
 	}
 }
