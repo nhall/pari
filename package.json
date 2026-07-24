@@ -102,7 +102,7 @@
 		"lit": "^3.3.2",
 		"remark-gfm": "^4.0.1",
 		"storybook": "^10.4.5",
-		"typescript": "^6.0.2",
+		"typescript": "^7.0.2",
 		"vite": "^8.0.2",
 		"vite-plugin-dts": "^5.0.2",
 		"vitest": "^4.1.9"
