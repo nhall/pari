@@ -4,6 +4,7 @@ coverage
 smoke-test/node_modules
 *.tgz
 storybook-static
+docs/agents
 
 
 # Editor
