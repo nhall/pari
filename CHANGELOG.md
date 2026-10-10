@@ -4,6 +4,11 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: [S
 
 ## [Unreleased]
 
+### Changed
+
+- Bumped the vitest family (`vitest`, `@vitest/browser`, `@vitest/browser-playwright`, `@vitest/coverage-v8`) to 5.0.3, and Storybook (`storybook` and all `@storybook/*` addons) to 10.6.1, the first release whose `addon-vitest` accepts vitest 5. Dev-only: the published package is unaffected.
+- Pinned `playwright` to 1.61.0 as an explicit devDependency so the client always matches the CI container image (`mcr.microsoft.com/playwright:v1.61.0-noble`). It was previously an unpinned peer of `@vitest/browser-playwright`, so a fresh resolve could pull a version with no matching image.
+
 ## [0.3.3] - 2026-06-09
 
 ### Added
