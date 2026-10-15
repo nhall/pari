@@ -4,6 +4,10 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: [S
 
 ## [Unreleased]
 
+### Fixed
+
+- The ESM build is no longer minified, so exported classes keep their real names (`PariDisclosure.name` was `"o"`). Class names now show up properly in devtools and stack traces. Your bundler still minifies for production, so shipped bundle sizes don't change. The IIFE bundle stays minified.
+
 ## [0.4.0] - 2026-10-14
 
 ### Added
