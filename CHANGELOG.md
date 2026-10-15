@@ -7,6 +7,8 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: [S
 ### Changed
 
 - Pinned all workflow runners to `ubuntu-26.04` instead of `ubuntu-latest`. Ubuntu 26.04 is generally available on GitHub Actions, and pinning means the next Ubuntu move is a deliberate, tested change rather than a silent one under the release pipeline. Dev-only: the published package is unaffected.
+- Dependabot now opens `playwright` updates as their own PR, separate from the weekly minor/patch group. A Playwright bump needs the CI and release container images bumped with it, so a failing Playwright update no longer blocks every other dependency. Dev-only.
+- `npm run test:smoke:browser` now serves the packed tarball through `smoke-test/run.mjs --serve` instead of npm-installing it, so it no longer rewrites tracked files or needs `python3`. The unused `smoke-test/package.json` and its lockfile are gone. Dev-only.
 
 ## [0.4.1] - 2026-10-14
 
