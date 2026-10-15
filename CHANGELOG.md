@@ -4,6 +4,11 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: [S
 
 ## [Unreleased]
 
+### Changed
+
+- Releases are automated. Merging a release PR that bumps the version in `package.json` now tags the merge commit, publishes to npm with provenance (still through Trusted Publishing, still from a `v*` tag), and creates the GitHub Release with notes from this changelog. Dev-only: the published package is unaffected.
+- `npm run test:smoke` is now a headless pass/fail check: it packs the tarball, loads the ESM and IIFE smoke pages in Chromium, and fails on any broken check. CI and the release workflow both run it. The old interactive version is `npm run test:smoke:browser`.
+
 ### Fixed
 
 - The ESM build is no longer minified, so exported classes keep their real names (`PariDisclosure.name` was `"o"`). Class names now show up properly in devtools and stack traces. Your bundler still minifies for production, so shipped bundle sizes don't change. The IIFE bundle stays minified.

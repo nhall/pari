@@ -24,6 +24,14 @@
 			<div data-content>Smoke test tooltip.</div>
 		</pari-tooltip>
 
+		<pari-dialog id="test-dialog">
+			<dialog aria-label="Smoke test dialog"><button data-close>Close</button></dialog>
+		</pari-dialog>
+
+		<pari-dialog id="test-dialog-gated" media="(max-width: 1px)">
+			<dialog aria-label="Smoke test gated dialog"><button data-close>Close</button></dialog>
+		</pari-dialog>
+
 		<script type="module">
 			// Test 1: full barrel (side-effect import)
 			await import('./node_modules/pari-components/dist/index.js');
@@ -81,6 +89,18 @@
 			console.log('7. tooltip.show() open state:', tooltip.open === true ? '✓ open' : '✗ not open');
 			tooltip.hide();
 			console.log('7. tooltip.hide() open state:', tooltip.open === false ? '✓ closed' : '✗ not closed');
+
+			// Test 8: dialog media gate and aria-modal timing
+			const gated = document.getElementById('test-dialog-gated');
+			gated.show();
+			console.log('8. media gate keeps dialog closed:', gated.open === false ? '✓ closed' : '✗ opened');
+			const dialog = document.getElementById('test-dialog');
+			const dialogEl = dialog.querySelector('dialog');
+			console.log('8. no aria-modal while closed:', !dialogEl.hasAttribute('aria-modal') ? '✓' : '✗');
+			dialog.show();
+			console.log('8. dialog.show() sets aria-modal:', dialog.open && dialogEl.getAttribute('aria-modal') === 'true' ? '✓ open' : '✗');
+			dialog.hide();
+			console.log('8. dialog.hide() open state:', dialog.open === false ? '✓ closed' : '✗ not closed');
 		</script>
 	</body>
 </html>

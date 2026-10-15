@@ -1,32 +1,76 @@
 name: Release
 
-on:
-  # Auto-fire when a release tag is pushed.
-  push:
-    tags:
-      - 'v*'
-  # Manual dispatch for when a tag already exists (e.g. first-time TP setup).
-  workflow_dispatch:
-    inputs:
-      tag:
-        description: 'Existing tag to publish (e.g. v0.3.0)'
-        required: true
-        type: string
+# Merging a release PR (a version bump in package.json) runs the whole release:
+#   1. tag:            creates vX.Y.Z at the merge commit and dispatches this workflow on that tag.
+#   2. publish:        on the tag, tests, smoke tests the tarball, publishes to npm with provenance.
+#   3. github-release: creates the GitHub Release from the CHANGELOG section plus generated PR notes.
+# Publishing always runs from a tag ref because the npm-publish environment only deploys v* tags.
+# To retry a failed publish: gh workflow run release.yml --ref vX.Y.Z
 
-# Workflow-level default: read-only. Publish job opts up to id-token: write for OIDC.
+on:
+  push:
+    branches: [main]
+    paths: [package.json]
+    # Pushing a tag by hand still publishes. Path filters don't apply to tag pushes.
+    tags: ['v*']
+  workflow_dispatch:
+
+# Workflow-level default: read-only. Jobs opt up to what they actually need.
 permissions:
   contents: read
 
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
+  tag:
+    name: Tag new version
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      # Push the release tag.
+      contents: write
+      # Dispatch the publish run on the new tag.
+      actions: write
+    steps:
+      - name: Checkout merge commit
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Tag and dispatch publish if the version is new
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          version=$(node -p "require('./package.json').version")
+          tag="v$version"
+
+          if git ls-remote --exit-code --tags origin "refs/tags/$tag" > /dev/null; then
+            echo "$tag already exists, nothing to release."
+            exit 0
+          fi
+
+          if ! grep -q "^## \[$version\]" CHANGELOG.md; then
+            echo "::error::package.json is at $version but CHANGELOG.md has no '## [$version]' section."
+            exit 1
+          fi
+
+          git tag "$tag" "$GITHUB_SHA"
+          git push origin "$tag"
+          # Tags pushed with GITHUB_TOKEN don't trigger workflows, but workflow_dispatch does.
+          gh workflow run release.yml --ref "$tag"
+          echo "Tagged $tag at $GITHUB_SHA and dispatched the publish run." >> "$GITHUB_STEP_SUMMARY"
+
   publish:
     name: Publish to npm with provenance
+    if: github.ref_type == 'tag'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     container:
       # Keep this tag in sync with the `playwright` version in package-lock.json.
       # Matches ci.yml so the test environment is identical.
       image: mcr.microsoft.com/playwright:v1.61.0-noble
-    # Required by npm Trusted Publishing config — npm only honors the OIDC token
+    # Required by npm Trusted Publishing config. npm only honors the OIDC token
     # if it carries this environment claim.
     environment: npm-publish
     permissions:
@@ -36,9 +80,6 @@ jobs:
     steps:
       - name: Checkout tagged commit
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          # workflow_dispatch supplies the tag explicitly; push trigger uses ref_name.
-          ref: ${{ inputs.tag || github.ref_name }}
 
       - name: Setup Node
         uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
@@ -46,6 +87,14 @@ jobs:
           node-version: 24
           cache: npm
           registry-url: 'https://registry.npmjs.org'
+
+      - name: Check tag matches package.json
+        run: |
+          expected="v$(node -p "require('./package.json').version")"
+          if [ "$expected" != "$GITHUB_REF_NAME" ]; then
+            echo "::error::Tag $GITHUB_REF_NAME doesn't match package.json version ($expected)."
+            exit 1
+          fi
 
       - name: Install dependencies
         run: npm ci
@@ -56,6 +105,49 @@ jobs:
       - name: Build
         run: npm run build
 
+      - name: Smoke test the packed tarball
+        run: node smoke-test/run.mjs
+
       - name: Publish to npm with provenance
         # --ignore-scripts skips prepublishOnly so we don't run test+build twice.
-        run: npm publish --provenance --access public --ignore-scripts
+        run: |
+          spec=$(node -p "const p = require('./package.json'); p.name + '@' + p.version")
+          if npm view "$spec" version > /dev/null 2>&1; then
+            echo "$spec is already on npm, skipping publish."
+          else
+            npm publish --provenance --access public --ignore-scripts
+          fi
+
+  github-release:
+    name: Create GitHub Release
+    needs: publish
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      # Create the release.
+      contents: write
+    steps:
+      - name: Checkout tagged commit
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Create release from CHANGELOG section
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          tag="$GITHUB_REF_NAME"
+          if gh release view "$tag" > /dev/null 2>&1; then
+            echo "Release $tag already exists."
+            exit 0
+          fi
+
+          version="${tag#v}"
+          awk -v heading="## [$version]" '
+            index($0, heading) == 1 { found = 1; next }
+            found && /^## \[/ { exit }
+            found { print }
+          ' CHANGELOG.md > section.md
+          printf "## What's new\n%s\n\n---\n" "$(cat section.md)" > notes.md
+
+          # --notes is prepended to the generated PR list.
+          gh release create "$tag" --verify-tag --title "$tag" --notes "$(cat notes.md)" --generate-notes
