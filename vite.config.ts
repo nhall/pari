@@ -25,6 +25,8 @@ export default defineConfig({
 		dts({ insertTypesEntry: true }),
 	],
 	build: {
+		// Ship readable ESM: consumers' bundlers minify, and class names survive for devtools and stack traces.
+		minify: false,
 		rollupOptions: {
 			input: {
 				index: resolve(__dirname, 'src/index.ts'),

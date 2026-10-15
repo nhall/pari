@@ -35,7 +35,7 @@
 
 			// Test 3: named class export from per-component path
 			const { PariDisclosure } = await import('./node_modules/pari-components/dist/components/disclosure.js');
-			console.log('3. Named class export:', PariDisclosure ? '✓ ' + PariDisclosure.name : '✗ undefined');
+			console.log('3. Named class export:', PariDisclosure?.name === 'PariDisclosure' ? '✓ ' + PariDisclosure.name : '✗ ' + PariDisclosure?.name);
 
 			// Test 4: all components registered after full import
 			const elements = [
@@ -62,7 +62,7 @@
 
 			// Test 6: notification individual import and show/hide
 			const { PariNotification } = await import('./node_modules/pari-components/dist/components/notification.js');
-			console.log('6. Named class export:', PariNotification ? '✓ ' + PariNotification.name : '✗ undefined');
+			console.log('6. Named class export:', PariNotification?.name === 'PariNotification' ? '✓ ' + PariNotification.name : '✗ ' + PariNotification?.name);
 			const notif = document.getElementById('test-notification');
 			notif.show();
 			console.log('6. notif.show() open state:', notif.open === true ? '✓ open' : '✗ not open');
@@ -71,7 +71,7 @@
 
 			// Test 7: tooltip individual import, ARIA wiring, and show/hide
 			const { PariTooltip } = await import('./node_modules/pari-components/dist/components/tooltip.js');
-			console.log('7. Named class export:', PariTooltip ? '✓ ' + PariTooltip.name : '✗ undefined');
+			console.log('7. Named class export:', PariTooltip?.name === 'PariTooltip' ? '✓ ' + PariTooltip.name : '✗ ' + PariTooltip?.name);
 			const tooltip = document.getElementById('test-tooltip');
 			const tooltipTrigger = tooltip.querySelector('[data-trigger]');
 			const tooltipContent = tooltip.querySelector('[data-content]');
