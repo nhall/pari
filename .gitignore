@@ -7,6 +7,16 @@ storybook-static
 docs/agents
 
 
+# Claude
+CLAUDE.md
+.claude/
+
+# Vercel
+.vercel/
+
+# Logs
+*.log
+
 # Editor
 .vscode
 .idea
