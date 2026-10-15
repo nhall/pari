@@ -4,6 +4,8 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: [S
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-10-14
+
 ### Added
 
 - `media` attribute on `pari-dialog`. While the CSS media query doesn't match, the trigger, a `deeplink` hash, and `show()` can't open the dialog, and an open dialog closes through the normal close path (scroll unlocks, `dialog:close` fires). It stays closed when the query matches again. Unlike `media` on `pari-disclosure`, this closes the dialog instead of switching it off. See `docs/adr/0001-dialog-media-attribute-force-closes-instead-of-disabling.md`.
@@ -13,6 +15,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: [S
 - `pari-dialog` now sets `aria-modal="true"` on its `<dialog>` only while it's open, and removes it on close. Before, it was set once on connect and stayed there. A closed dialog that's styled visible, like an inline sidebar, no longer tells assistive technology it's modal.
 - Bumped the vitest family (`vitest`, `@vitest/browser`, `@vitest/browser-playwright`, `@vitest/coverage-v8`) to 5.0.3, and Storybook (`storybook` and all `@storybook/*` addons) to 10.6.1, the first release whose `addon-vitest` accepts vitest 5. Dev-only: the published package is unaffected.
 - Pinned `playwright` to 1.61.0 as an explicit devDependency so the client always matches the CI container image (`mcr.microsoft.com/playwright:v1.61.0-noble`). It was previously an unpinned peer of `@vitest/browser-playwright`, so a fresh resolve could pull a version with no matching image.
+- Moved the release workflow's container to `mcr.microsoft.com/playwright:v1.61.0-noble` to match CI and the pinned `playwright`. It had been left on `v1.59.1`, which has no browser build for 1.61.0, so the pre-publish test step would have failed.
 
 ## [0.3.3] - 2026-06-09
 
