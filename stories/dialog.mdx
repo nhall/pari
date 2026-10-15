@@ -24,7 +24,7 @@ Follows the [APG Dialog (Modal) Pattern](https://www.w3.org/WAI/ARIA/apg/pattern
 </pari-dialog>
 ```
 
-The `<dialog>` element needs an `id` and `aria-labelledby` pointing to a heading inside it. If you want a specific element to receive focus when the dialog opens, add the native `autofocus` attribute to it.
+The `<dialog>` element needs an `id` and `aria-labelledby` pointing to a heading inside it. Pari adds `aria-modal="true"` while the dialog is open and removes it on close. If you want a specific element to receive focus when the dialog opens, add the native `autofocus` attribute to it.
 
 ## Attributes
 
@@ -33,6 +33,7 @@ The `<dialog>` element needs an `id` and `aria-labelledby` pointing to a heading
 | `close-on-backdrop` | boolean | Lets users close the dialog by clicking the backdrop area outside the content. |
 | `no-scroll-lock` | boolean | Keeps the page scrollable behind the dialog. By default, scrolling is locked when the dialog is open. |
 | `deeplink` | boolean | Ties the open state to the URL hash using the dialog ID. Navigate to `#my-dialog` and it opens automatically. |
+| `media` | string | A CSS media query. The dialog can only open while the query matches, whether from the trigger, a deeplink, or `show()`. If it's open when the query stops matching, it closes. |
 
 ## Data attributes
 
@@ -82,6 +83,16 @@ The page behind the dialog remains scrollable. This can be useful for dialogs th
 The dialog opens automatically when the URL hash matches the dialog ID. Opening and closing updates the hash.
 
 <Canvas of={DialogStories.Deeplink} />
+
+### Media query
+
+Some dialogs only make sense at certain screen sizes, like a filters panel that opens as a modal on phones but sits inline as a sidebar on desktop. Add `media` and the dialog only opens while the query matches. Outside it, the trigger does nothing, a matching deeplink hash is ignored, and calling `show()` does nothing either.
+
+If the dialog is open when the query stops matching, it closes the same way it would if you'd clicked close: the page scrolls again and `dialog:close` fires. It won't reopen when the query matches again. It waits for someone to open it.
+
+This is a little different from `media` on Disclosure, which switches itself off and leaves its content as it was. An open modal dialog has no sensible "switched off" state, so closing it is the safe choice. Pari ships no CSS, so hiding the trigger and laying out the inline version is up to you, as in this example.
+
+<Canvas of={DialogStories.MediaQuery} />
 
 ### Autofocus
 

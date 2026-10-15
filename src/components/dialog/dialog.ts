@@ -15,6 +15,9 @@ import { register, unregister, updateHash } from '../../utils/deeplink.js';
  * @attr {boolean} close-on-backdrop - Close when clicking the backdrop.
  * @attr {boolean} no-scroll-lock    - Disable scroll locking when open.
  * @attr {boolean} deeplink          - Sync open state with URL hash (uses dialog ID).
+ * @attr {string}  media             - CSS media query; dialog can only open (trigger, deeplink,
+ *                                      or show()) while matching, and force-closes when the
+ *                                      query stops matching.
  *
  * @fires dialog:open  - After the dialog opens.  detail: { instance }
  * @fires dialog:close - After the dialog closes. detail: { instance }
@@ -26,6 +29,8 @@ export class PariDialog extends HTMLElement {
 	private _handleClose = this._onClose.bind(this);
 	private _handleBackdropClick = this._onBackdropClick.bind(this);
 	private _deeplinkHandler: (() => void) | null = null;
+	private _mediaQueryList: MediaQueryList | null = null;
+	private _handleMediaChange = this._onMediaChange.bind(this);
 
 	connectedCallback() {
 		if (!this.firstElementChild) {
@@ -37,8 +42,6 @@ export class PariDialog extends HTMLElement {
 		this._dialog = this.querySelector<HTMLDialogElement>('dialog');
 		if (!this._dialog) return;
 
-		this._dialog.setAttribute('aria-modal', 'true');
-
 		const trigger = this.querySelector<HTMLElement>('[data-trigger]');
 		if (trigger) {
 			trigger.setAttribute('aria-haspopup', 'dialog');
@@ -49,6 +52,14 @@ export class PariDialog extends HTMLElement {
 
 		if (this.hasAttribute('close-on-backdrop')) {
 			this._dialog.addEventListener('click', this._handleBackdropClick);
+		}
+
+		const media = this.getAttribute('media');
+
+		// Must exist before register(), which runs the deeplink handler synchronously.
+		if (media) {
+			this._mediaQueryList = window.matchMedia(media);
+			this._mediaQueryList.addEventListener('change', this._handleMediaChange);
 		}
 
 		if (this.hasAttribute('deeplink') && this._dialog.id) {
@@ -72,16 +83,24 @@ export class PariDialog extends HTMLElement {
 			unregister(`dialog#${this._dialog.id}`, this._deeplinkHandler);
 			this._deeplinkHandler = null;
 		}
+
+		if (this._mediaQueryList) {
+			this._mediaQueryList.removeEventListener('change', this._handleMediaChange);
+			this._mediaQueryList = null;
+		}
 	}
 
 	get open(): boolean {
 		return this._dialog?.open ?? false;
 	}
 
-	/** Open the dialog as a modal. */
+	/** Open the dialog as a modal. No-op while a `media` query is set and not matching. */
 	show() {
 		if (!this._dialog || this._dialog.open) return;
+		if (this._mediaQueryList && !this._mediaQueryList.matches) return;
 
+		// Only while open: a closed dialog styled visible (e.g. an inline sidebar) isn't modal.
+		this._dialog.setAttribute('aria-modal', 'true');
 		this._dialog.showModal();
 
 		if (!this.hasAttribute('no-scroll-lock')) {
@@ -121,7 +140,15 @@ export class PariDialog extends HTMLElement {
 		}
 	}
 
+	private _onMediaChange(event: MediaQueryListEvent) {
+		if (!event.matches) {
+			this.hide();
+		}
+	}
+
 	private _onClose() {
+		this._dialog?.removeAttribute('aria-modal');
+
 		if (!this.hasAttribute('no-scroll-lock')) {
 			unlockScroll();
 		}
