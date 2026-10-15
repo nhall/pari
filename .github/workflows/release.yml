@@ -27,7 +27,7 @@ jobs:
   tag:
     name: Tag new version
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 5
     permissions:
       # Push the release tag.
@@ -64,7 +64,7 @@ jobs:
   publish:
     name: Publish to npm with provenance
     if: github.ref_type == 'tag'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     container:
       # Keep this tag in sync with the `playwright` version in package-lock.json.
@@ -121,7 +121,7 @@ jobs:
   github-release:
     name: Create GitHub Release
     needs: publish
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 5
     permissions:
       # Create the release.

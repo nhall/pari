@@ -4,6 +4,10 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: [S
 
 ## [Unreleased]
 
+### Changed
+
+- Pinned all workflow runners to `ubuntu-24.04` instead of `ubuntu-latest`, which GitHub moves to Ubuntu 26 starting 2026-10-19. Moving to a new Ubuntu is now a deliberate, tested change rather than a silent one under the release pipeline. Dev-only: the published package is unaffected.
+
 ## [0.4.1] - 2026-10-14
 
 ### Changed
