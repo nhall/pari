@@ -69,7 +69,7 @@ jobs:
     container:
       # Keep this tag in sync with the `playwright` version in package-lock.json.
       # Matches ci.yml so the test environment is identical.
-      image: mcr.microsoft.com/playwright:v1.61.0-noble
+      image: mcr.microsoft.com/playwright:v1.64.0-noble
     # Required by npm Trusted Publishing config. npm only honors the OIDC token
     # if it carries this environment claim.
     environment: npm-publish

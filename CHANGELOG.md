@@ -8,6 +8,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: [S
 
 - Releases are automated. Merging a release PR that bumps the version in `package.json` now tags the merge commit, publishes to npm with provenance (still through Trusted Publishing, still from a `v*` tag), and creates the GitHub Release with notes from this changelog. Dev-only: the published package is unaffected.
 - `npm run test:smoke` is now a headless pass/fail check: it packs the tarball, loads the ESM and IIFE smoke pages in Chromium, and fails on any broken check. CI and the release workflow both run it. The old interactive version is `npm run test:smoke:browser`.
+- Bumped `playwright` to 1.64.0, and the CI and release containers to `mcr.microsoft.com/playwright:v1.64.0-noble` with it, plus `@types/node`, `vite` and `vite-plugin-dts` patch updates. Dev-only: the published package is unaffected.
 
 ### Fixed
 
