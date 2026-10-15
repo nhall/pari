@@ -9,10 +9,17 @@ updates:
       day: monday
     open-pull-requests-limit: 5
     groups:
+      # Playwright must move together with the container image tags in ci.yml and release.yml,
+      # or CI fails. Its own PR keeps that failure from blocking the other updates.
+      playwright:
+        patterns:
+          - playwright
       minor-and-patch:
         update-types:
           - minor
           - patch
+        exclude-patterns:
+          - playwright
 
   # GitHub Actions versions in workflow files.
   - package-ecosystem: github-actions
