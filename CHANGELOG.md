@@ -4,6 +4,8 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: [S
 
 ## [Unreleased]
 
+## [0.4.1] - 2026-10-14
+
 ### Changed
 
 - Releases are automated. Merging a release PR that bumps the version in `package.json` now tags the merge commit, publishes to npm with provenance (still through Trusted Publishing, still from a `v*` tag), and creates the GitHub Release with notes from this changelog. Dev-only: the published package is unaffected.
