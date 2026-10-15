@@ -14,6 +14,38 @@ type Story = StoryObj;
 
 const tick = () => new Promise((r) => setTimeout(r, 50));
 
+const MEDIA_QUERY = '(max-width: 740px)';
+
+let fakeMediaQueryList: (EventTarget & { matches: boolean; media: string }) | null = null;
+
+const stubMatchMedia = (matches: boolean) => {
+	const original = window.matchMedia;
+	const fake = Object.assign(new EventTarget(), { matches, media: MEDIA_QUERY });
+	fakeMediaQueryList = fake;
+	window.matchMedia = (query: string) =>
+		query === MEDIA_QUERY ? (fake as unknown as MediaQueryList) : original.call(window, query);
+
+	return () => {
+		window.matchMedia = original;
+		fakeMediaQueryList = null;
+	};
+};
+
+const stubHashAndMatchMedia = (hash: string, matches: boolean) => {
+	history.replaceState(null, '', hash);
+	const restore = stubMatchMedia(matches);
+
+	return () => {
+		restore();
+		history.replaceState(null, '', window.location.pathname + window.location.search);
+	};
+};
+
+const setMediaMatches = (matches: boolean) => {
+	fakeMediaQueryList!.matches = matches;
+	fakeMediaQueryList!.dispatchEvent(new MediaQueryListEvent('change', { matches, media: MEDIA_QUERY }));
+};
+
 export const Default: Story = {
 	render: () => html`
 		<pari-dialog>
@@ -32,18 +64,20 @@ export const Default: Story = {
 		const dialog = canvasElement.querySelector('dialog') as HTMLDialogElement;
 		const pariDialog = canvasElement.querySelector('pari-dialog') as any;
 
-		await expect(dialog).toHaveAttribute('aria-modal', 'true');
 		await expect(trigger).toHaveAttribute('aria-haspopup', 'dialog');
+		await expect(dialog).not.toHaveAttribute('aria-modal');
 		expect(dialog.open).toBe(false);
 
 		trigger.click();
 		await tick();
 		expect(dialog.open).toBe(true);
+		await expect(dialog).toHaveAttribute('aria-modal', 'true');
 		expect(document.documentElement.classList.contains('state-locked')).toBe(true);
 
 		dialog.querySelector<HTMLElement>('[data-close]')!.click();
 		await tick();
 		expect(dialog.open).toBe(false);
+		await expect(dialog).not.toHaveAttribute('aria-modal');
 		expect(document.documentElement.classList.contains('state-locked')).toBe(false);
 
 		// No-op guards
@@ -165,6 +199,159 @@ export const Deeplink: Story = {
 		dialog.querySelector<HTMLElement>('[data-close]')!.click();
 		await tick();
 	},
+};
+
+export const MediaGated: Story = {
+	beforeEach: () => stubMatchMedia(false),
+	render: () => html`
+		<pari-dialog media=${MEDIA_QUERY}>
+			<button data-trigger>Open dialog</button>
+			<dialog id="media-dialog" aria-labelledby="media-dialog-title">
+				<div class="sb-dialog-body">
+					<h2 id="media-dialog-title">Media gated</h2>
+					<p>This dialog can only open while the media query matches.</p>
+					<button data-close>Close</button>
+				</div>
+			</dialog>
+		</pari-dialog>
+	`,
+	play: async ({ canvasElement }) => {
+		const trigger = canvasElement.querySelector('[data-trigger]') as HTMLElement;
+		const dialog = canvasElement.querySelector('dialog') as HTMLDialogElement;
+		const pariDialog = canvasElement.querySelector('pari-dialog') as any;
+		const isLocked = () => document.documentElement.classList.contains('state-locked');
+
+		let closeCount = 0;
+		canvasElement.addEventListener('dialog:close', () => closeCount++);
+
+		trigger.click();
+		await tick();
+		expect(dialog.open).toBe(false);
+		expect(isLocked()).toBe(false);
+
+		pariDialog.show();
+		await tick();
+		expect(dialog.open).toBe(false);
+		await expect(dialog).not.toHaveAttribute('aria-modal');
+
+		setMediaMatches(true);
+		trigger.click();
+		await tick();
+		expect(dialog.open).toBe(true);
+		expect(isLocked()).toBe(true);
+
+		// Leaving the matching range force-closes through the normal close path
+		setMediaMatches(false);
+		await tick();
+		expect(dialog.open).toBe(false);
+		expect(isLocked()).toBe(false);
+		expect(closeCount).toBe(1);
+
+		// Re-entering the matching range does not reopen
+		setMediaMatches(true);
+		await tick();
+		expect(dialog.open).toBe(false);
+
+		// Leaving the range while already closed fires nothing
+		setMediaMatches(false);
+		await tick();
+		expect(closeCount).toBe(1);
+	},
+};
+
+export const MediaGatedDeeplink: Story = {
+	beforeEach: () => stubHashAndMatchMedia('#media-dl-dialog', false),
+	render: () => html`
+		<pari-dialog deeplink media=${MEDIA_QUERY}>
+			<button data-trigger>Open dialog</button>
+			<dialog id="media-dl-dialog" aria-labelledby="media-dl-dialog-title">
+				<div class="sb-dialog-body">
+					<h2 id="media-dl-dialog-title">Media gated deeplink</h2>
+					<p>The URL hash only opens this dialog while the media query matches.</p>
+					<button data-close>Close</button>
+				</div>
+			</dialog>
+		</pari-dialog>
+	`,
+	play: async ({ canvasElement }) => {
+		const dialog = canvasElement.querySelector('dialog') as HTMLDialogElement;
+
+		// A matching hash on load does not open the dialog while the query does not match
+		await tick();
+		expect(dialog.open).toBe(false);
+
+		window.dispatchEvent(new HashChangeEvent('hashchange'));
+		await tick();
+		expect(dialog.open).toBe(false);
+
+		setMediaMatches(true);
+		window.dispatchEvent(new HashChangeEvent('hashchange'));
+		await tick();
+		expect(dialog.open).toBe(true);
+
+		dialog.querySelector<HTMLElement>('[data-close]')!.click();
+		await tick();
+	},
+};
+
+export const MediaGatedDeeplinkOnLoad: Story = {
+	beforeEach: () => stubHashAndMatchMedia('#media-dl-load-dialog', true),
+	render: () => html`
+		<pari-dialog deeplink media=${MEDIA_QUERY}>
+			<button data-trigger>Open dialog</button>
+			<dialog id="media-dl-load-dialog" aria-labelledby="media-dl-load-dialog-title">
+				<div class="sb-dialog-body">
+					<h2 id="media-dl-load-dialog-title">Media gated deeplink on load</h2>
+					<p>The URL hash opens this dialog on load because the media query matches.</p>
+					<button data-close>Close</button>
+				</div>
+			</dialog>
+		</pari-dialog>
+	`,
+	play: async ({ canvasElement }) => {
+		const dialog = canvasElement.querySelector('dialog') as HTMLDialogElement;
+
+		// A matching hash on load opens the dialog while the query matches
+		await tick();
+		expect(dialog.open).toBe(true);
+
+		dialog.querySelector<HTMLElement>('[data-close]')!.click();
+		await tick();
+		expect(window.location.hash).toBe('');
+	},
+};
+
+export const MediaQuery: Story = {
+	render: () => html`
+		<style>
+			@media (min-width: 741px) {
+				.sb-media-dialog [data-trigger],
+				.sb-media-dialog [data-close] {
+					display: none;
+				}
+
+				.sb-media-dialog dialog {
+					max-inline-size: 20rem;
+
+					display: block;
+					position: static;
+
+					margin-block: 0;
+					margin-inline: 0;
+				}
+			}
+		</style>
+		<pari-dialog class="sb-media-dialog" media="(max-width: 740px)">
+			<button data-trigger>Show filters</button>
+			<dialog id="media-demo-dialog" aria-labelledby="media-demo-dialog-title">
+				<div class="sb-dialog-body">
+					<h2 id="media-demo-dialog-title">Filters</h2>
+					<p>On small screens, these filters open in a modal dialog. On larger screens, the trigger hides and the filters sit inline like a sidebar. If the dialog is open when you cross the breakpoint, it closes and the page scrolls again. Resize your browser to see it switch.</p>
+					<button data-close>Close</button>
+				</div>
+			</dialog>
+		</pari-dialog>
+	`,
 };
 
 export const Autofocus: Story = {
